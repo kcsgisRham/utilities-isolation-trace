@@ -15,7 +15,7 @@ define([], function () {
         //you could define the default here and setup configuration settings to allow users to choose a different
         //color theme.  
         "theme": "blue",
-        "bingmapskey": "", //Enter the url to your organizations bing maps key if you want to use bing basemaps
+        "bingMapsKey": "", //Enter the url to your organizations bing maps key if you want to use bing basemaps
         "sharinghost": location.protocol + "//" + "www.arcgis.com", //Defaults to arcgis.com. Set this value to your portal or organization host name. 
 
         
