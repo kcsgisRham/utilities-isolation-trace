@@ -211,16 +211,9 @@ function(
                 },
                 callbackParamName: "callback"
             }).then(lang.hitch(this, function(response) {
-                if (this.config.helperServices == null) {
-                    this.config.helperServices = {};
-                    lang.mixin(this.config.helperServices, response.helperServices);
-                }
-                else {
-                    lang.mixin(response.helperServices, this.config.helperServices);
-                    this.config.helperServices = response.helperServices;
 
-                    
-                }
+                declare.safeMixin(this.config.helperServices || {}, response.helperServices);
+
                 //Let's set the geometry helper service to be the app default.  
                 if (this.config.helperServices && this.config.helperServices.geometry && this.config.helperServices.geometry.url) {
                     esriConfig.defaults.geometryService = new GeometryService(this.config.helperServices.geometry.url);

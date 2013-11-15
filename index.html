@@ -88,10 +88,11 @@
             }, {
                 name: "config",
                 location: package_path + '/config'
-            }, {
-                name: "templateConfig",
-                location: package_path
-            }]
+            },  {
+            name: "templateConfig",
+            location: package_path//package_path.substr(0, package_path.lastIndexOf('/'))
+                
+        }]
         };
     </script>
 
