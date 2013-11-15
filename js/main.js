@@ -207,8 +207,6 @@ function (
             this.flagSymbol.yoffset = 15; 
             this.barrierSymbol = new SimpleMarkerSymbol().setPath("M23.963,20.834L17.5,9.64c-0.825-1.429-2.175-1.429-3,0L8.037,20.834c-0.825,1.429-0.15,2.598,1.5,2.598h12.926C24.113,23.432,24.788,22.263,23.963,20.834z").setSize(25).setColor(new dojo.Color([0, 0, 0]));
             this.valveSymbol = new SimpleMarkerSymbol().setStyle(SimpleMarkerSymbol.CIRCLE).setSize(24).setColor(new dojo.Color([0, 255, 255, 0.5])).setOutline(new SimpleLineSymbol().setStyle(SimpleLineSymbol.SOLID).setColor(new dojo.Color([0, 255, 255])).setWidth(5));
-            this.valveSymbol.xoffset = 3;
-            this.valveSymbol.yoffset = -4;
 
             this.flagRend = new SimpleRenderer(this.flagSymbol);
             this.barrierRend = new SimpleRenderer(this.barrierSymbol);
@@ -241,6 +239,7 @@ function (
         },
         _executeTrace: function () {
             this.gp.setOutSpatialReference({ wkid: 102100 });
+            this.gp.setProcessSpatialReference({ wkid: 102100 }); 
             
             this.flagFeature.features = this.flagLayer.graphics;
             this.barrierFeature.features=this.barrierLayer.graphics; 
@@ -255,7 +254,7 @@ function (
             }
             else {
 
-                var params = { "Flags": this.flagFeature, "Barriers": this.barrierFeature };
+                var params = { "Flags": this.flagFeature, "Barriers": this.barrierFeature};
 
                 var gpDeferred = this.gp.submitJob(params, lang.hitch(this, this._traceResults), lang.hitch(this, this._traceCallback), lang.hitch(this, this._errFeatures));
 
@@ -313,46 +312,10 @@ function (
             this.resultLayer.setRenderer(this.valveRend);
 
             this.map.addLayers([this.flagLayer, this.barrierLayer, this.resultLayer]); 
-            //array.forEach(this.layers, function (layer) {
-
-
-            //    if (layer.layerObject.layerInfos != null) {
-            //        array.forEach(layer.layerObject.layerInfos, function (subLyrs) {
-            //            if (subLyrs.name == this.config.valveLayer) {
-
-            //                //this.serviceAreaLayerURL = layer.layerObject.url + "/" + subLyrs.id;
-            //                //console.log("Service Layer set");
-
-
-            //                if (layer.layers != null) {
-            //                    array.forEach(layer.layers, function (popUp) {
-            //                        if (subLyrs.id == popUp.id) {
-            //                            this.popupInfo = popUp.popupInfo;
-            //                        }
-            //                    },this);
-            //                }
-
-            //            }
-            //        }, this);
-            //    }
-            //    else {
-
-            //        if (layer.title == this.config.valveLayer) {
-            //            this.popupInfo = layer.popupInfo;
-            //            //this.serviceAreaLayerURL = layer.layerObject.url;
-            //            console.log("Service Layer set");
-
-            //        }
-            //    }
-
-
-            //}, this);
 
         },
         //create a map based on the input web map id
         _createWebMap: function () {
-            //dojo.style("loader", "display", "block");
-
             arcgisUtils.createMap(this.config.webmap, "mapDiv", {
                 mapOptions: {
                     //Optionally define additional map config here for example you can 
