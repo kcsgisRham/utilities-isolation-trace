@@ -147,6 +147,31 @@ html, body {
     background-repeat: no-repeat;
 }
 
+.executeButtonProcess {
+    position: absolute;
+    top: 215px;
+    left: 20px;
+    z-index: 50;
+    padding: 2px;
+    width: 30px;
+    height: 30px;
+    background-color: #666;
+    background-color: rgba(102,102,102,0.80);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -o-border-radius: 5px;
+    border-radius: 5px;
+    background-image: url("../images/locate-spinner.gif");
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+
 .clearButton {
     position: absolute;
     top: 255px;
