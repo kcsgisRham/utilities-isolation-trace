@@ -4,10 +4,7 @@ define([], function () {
     //and url parameters.
     var defaults = {
         "appid": "",
-        "webmap": "cfa183faa7434ddda27422025510065c", // "0eece0d5de2140e9a44d8050f943fd18", "de5ae0c2040c49d38e9ea0637454ac73"
-        
-        //"webmap": "b0608f7dccdf480eb8d02771ebe72d87", // "0eece0d5de2140e9a44d8050f943fd18", "de5ae0c2040c49d38e9ea0637454ac73"
-
+        "webmap": "067b19e4be4d4b04a6443a4fd47c86a3", 
         "oauthappid": null, //"AFTKRmv16wj14N3z",
         //Group templates must support a group url parameter. This will contain the id of the group. 
         //group: "",
@@ -23,8 +20,8 @@ define([], function () {
 
         "geometryUrl": "http://tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer",
 
-        "gpUrl": "http://localhost:6080/arcgis/rest/services/IsolationTrace/IsolationTrace/GPServer/IsolationTrace",
-        "gpOutput": "IsolatingValves,IsolatedHydrants",
+        "gpUrl": "http://utilities-vm:6080/arcgis/rest/services/IsolationTrace/GPServer/IsolationTrace",
+        "gpOutput": "Isolating_Valves,Isolated_Hydrants",
         "tabContent": "0", 
         "storeResults": true
 
