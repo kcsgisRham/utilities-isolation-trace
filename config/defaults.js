@@ -23,8 +23,10 @@ define([], function () {
 
         "geometryUrl": "http://tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer",
 
-        "gpUrl": "http://localhost:6080/arcgis/rest/services/IsolationTrace/GPServer/IsolationTrace",
-        "gpOutput": "IsolatingValves"
+        "gpUrl": "http://localhost:6080/arcgis/rest/services/IsolationTrace/IsolationTrace/GPServer/IsolationTrace",
+        "gpOutput": "IsolatingValves,IsolatedHydrants",
+        "tabContent": "0", 
+        "storeResults": true
 
     };
     return defaults;

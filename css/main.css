@@ -237,7 +237,7 @@ html, body {
     -moz-opacity: 0.70;
     -khtml-opacity: 0.70;
     opacity: 0.70;
-    height: 100px;
+    height: 200px;
     /*display: none;*/
 }
 
@@ -293,7 +293,7 @@ html, body {
     width: 100%;
     overflow: hidden;
     float: left;
-    display: block;
+    display: inline;
     margin-top: 5px;
     margin-bottom: 0px;
     padding: 0px;
@@ -301,49 +301,28 @@ html, body {
 
 .panelSearchTab {
     position: relative;
-    height: 100%;
-    width: 100%;
     overflow: hidden;
     float: left;
     display: block;
     margin-top: 15px;
     margin-bottom: 0px;
     padding: 0px;
-}
-
-
-
-.panelTitle {
-    position: absolute;
-    left: 0px;
-    top: 0px;
-    width: 100%;
-    height: 25px;
-    /*font-family: HelveticaNeue;*/
+    font-size: 14pt;
     color: #ffffff;
-    font-variant: small-caps; 
-    font-weight: 500; 
-    letter-spacing: 0.5px; 
-    text-align: center;
-    line-height: 25px;
+    vertical-align: top;
 }
 
 .panelInfo {
-    position: relative;
-    left: 0px;
-   top: 25px;
-    width: 100%;
-    height: 100%;
-    /*font-family: steelfish_rgregular;*/
-    font-size: 32pt;
-    font-variant: small-caps; 
-    font-weight: bold; 
-    color: #ffffff;
-    text-align: center;
-   
+     position:relative;
+    font-size: 12pt;
+    color: #ffffff; 
 }
-
-
+.panelInfoLabel {
+     position:relative;
+    font-size: 18pt;
+    color: #ffffff;
+    float: left; 
+}
 
 .claro .resultsPanelLeft {
     background-color: #000000;

@@ -36,43 +36,8 @@
         </div>
         <div class="edgePanelTop" id="titleblock" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region: 'top'">Water Network Trace</div>
         <div class="edgePanelBottom" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region: 'bottom'">
-            <div id="searchPanel" class="appLayout" data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="design: 'sidebar'">
-                <div class="searchPanelCenter" id="searchPanelCenter" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region: 'center'">
-                    <div id="panelSignal" class="panelResultsTab">
-                        <div id="titleValves" class="panelTitle">
-                            Valve
-                        </div>
-                        <div id="infoSignal" class="panelInfo">0</div>
-
-                    </div>
-                    <!-- <div class="panelBreak">
-                        <img src="images/break.png" />
-
-                    </div>-->
-
-                    <!--  <div id="panelFeatures" class="panelResultsTab">
-                        <div id="titleFeatures" class="panelTitle">
-                            Other
-                        </div>
-                        <div id="infoFeatures" class="panelInfo">
-                            0
-                        </div>
-                    </div>-->
-                </div>
-                <!--<div id="resultsContainer" class="appLayout" data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="design: 'headline'">
-
-                        <div class="resultsPanelLeft" data-dojo-type="dijit.layout.ContentPane" data-dojo-props="region: 'left'">
-                            <label for="routeLength" id="routeLengthLabel">Route Center</label>
-
-                            <div id="routeLength" class="userControls">
-                            </div>
-                        </div>
-                        <div class="resultsPanelCenter" data-dojo-type="dijit.layout.ContentPane" data-dojo-props="region: 'center'">left</div>
-                        <!--<div class="appLayout" data-dojo-type="dijit.layout.ContentPane" data-dojo-props="region: 'right'">Right</div>-->
-
+            <div id="test" class=""> </div>
             </div>
-
-        </div>
     </div>
 
 
@@ -88,11 +53,11 @@
             }, {
                 name: "config",
                 location: package_path + '/config'
-            },  {
-            name: "templateConfig",
-            location: package_path//package_path.substr(0, package_path.lastIndexOf('/'))
-                
-        }]
+            }, {
+                name: "templateConfig",
+                location: package_path//package_path.substr(0, package_path.lastIndexOf('/'))
+
+            }]
         };
     </script>
 
@@ -132,6 +97,7 @@
             //from the javascript/nls/resource files. 
             //Note that we've included a placeholder nls folder and a resource file with one error string
             //to show how to setup the strings file.
+           
 
             var supportsLocalization = true; //defaults to true
 

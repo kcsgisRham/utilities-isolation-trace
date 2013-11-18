@@ -17,7 +17,8 @@ define({
         ui:
         {
             title: "Water Network Trace App",
-            valveCount: "Valve Count"
+            valveCount: "Isolated Valve Count", 
+            hydrantCount: "Isolated Hydrant Count"
 
         },
         page:
