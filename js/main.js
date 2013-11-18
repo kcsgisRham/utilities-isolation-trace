@@ -69,10 +69,10 @@ function (
         },
         _mapLoaded: function () {
             // Map is ready
-
+           
             this._initMap();
 
-                dojo.connect(window, "onresize", this._resizeTabs);
+            dojo.connect(window, "onresize", this._resizeTabs);
             console.log('Map Initilized');
 
             console.log('map loaded');
@@ -84,14 +84,14 @@ function (
             console.log('Graphics Created');
             this._createToolbar();
             console.log('Toolbar Created');
-
+            this._createTabs();
+            console.log('Tabs Created');
 
 
             console.log('Init Code Completed');
             dojo.style("loader", "display", "none");
             console.log('Loader Hidden');
-            this._createTabs();
-            console.log('Tabs Created');
+          
         },
         _initPage: function () {
 
@@ -208,18 +208,20 @@ function (
             console.log("");
         },
         _createTabs: function () {
-            this.tc = new TabContainer({
-                //style: "height: 100%; width: 100%;doLayout='true'"
-            }, "test");
+            this.tc = new TabContainer({ name: "panelResultsTab", }, "panelResultsTab");
 
             var parts = this.config.gpOutput.split(",");
             this.cps = [];
             if (parts.length > 0) {
                 array.forEach(parts, function (results) {
                       
-                   var cp1 = new ContentPane({
-                       title: results,
+                    var cp1 = new ContentPane({
+
+                       title: results.replace("_"," "),
                        content: this.config.tabContent,
+                       name: results ,
+                       id: results + "CP"
+                       
                     });
                     
 
@@ -376,30 +378,29 @@ function (
 
         },
         _addFeatures: function (result, messages) {
-            console.log(result);
+            console.log(result.paramName);
 
-            var valvefeatures = result.value.features;
-            for (var f = 0, fl = valvefeatures.length; f < fl; f++) {
-                var feature = valvefeatures[f];
+            var resultfeatures = result.value.features;
+            for (var f = 0, fl = resultfeatures.length; f < fl; f++) {
+                var feature = resultfeatures[f];
                 feature.setSymbol(this.valveSymbol);
                 this.resultLayer.add(feature);
                 this.multiPoint.addPoint(feature.geometry);
 
-                //if (result.paramName == "IsolatingValves") {
-                //    this.cps[0].setContent(valvefeatures.length)
-                //}
-                //else if (result.paramName == "IsolatedHydrants") {
-                //    this.cps[1].setContent(valvefeatures.length)
-                //}
-
+              
                 
                 //if (typeof feature.getDojoShape == 'function') {
                 //    feature.getDojoShape().moveToFront();
                 //}
-            }     
-            //var displayText = valvefeatures.length;
-            //var textSymbol = new TextSymbol(displayText);
-            //dojo.byId('infoSignal').innerHTML = displayText;
+            }
+
+
+            //var cp = dojo.byId(result.paramName + "CP");
+            //cp.innerHTML = resultfeatures.length;
+
+            var cp = dijit.byId(result.paramName + "CP");
+            cp.set("content", String(resultfeatures.length));
+
 
 
         },
@@ -423,7 +424,7 @@ function (
         },
         //create a map based on the input web map id
         _createWebMap: function () {
-            //dojo.style("loader", "display", "block");
+            dojo.style("loader", "display", "block");
 
             arcgisUtils.createMap(this.config.webmap, "mapDiv", {
                 mapOptions: {

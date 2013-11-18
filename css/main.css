@@ -229,8 +229,36 @@ html, body {
     height: 100%;
 }
 
+.claro .dijitTabContainerTop-dijitContentPane {
+   background-color: #666;
+    background-color: rgba(102,102,102,0.80);
+    color: #ffffff;
+        font-size: 52pt;
+    
+    text-align: center;
+    line-height: 100px;
+   
+}
 
-
+.claro .dijitChecked.dijitTab .tabLabel {
+    /**/
+}
+.claro .dijitTabChecked {
+      background-color: yellow !important;
+      -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    outline: 0;
+}
+.claro .dijitTabContainerTop-tabs .dijitTabChecked {
+    background-image: -moz-linear-gradient(center top , #FFFFFF 0px, #FFFFFF 1px, rgba(255, 255, 255, 0) 2px, #FFFFFF 19px) !important;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    outline: 0;
+}
 .claro .edgePanelBottom {
     background-color: #000000;
     filter: alpha(opacity=70);
@@ -287,33 +315,22 @@ html, body {
     background: url("images/break.png") no-repeat;
 }
 
-.panelResultsTab {
+.claro .dijitTabContainer{
     position: relative;
     height: 100%;
     width: 100%;
     overflow: hidden;
     float: left;
     display: inline;
-    margin-top: 5px;
-    margin-bottom: 0px;
-    padding: 0px;
-}
-
-.panelSearchTab {
-    position: relative;
-    overflow: hidden;
-    float: left;
-    display: block;
-    margin-top: 15px;
-    margin-bottom: 0px;
+    margin-top: 2px;
+    margin-bottom: 2px;
     padding: 0px;
     font-size: 14pt;
-    color: #ffffff;
-    vertical-align: top;
 }
 
+
 .panelInfo {
-     position:relative;
+    position:relative;
     font-size: 12pt;
     color: #ffffff; 
 }
@@ -330,19 +347,13 @@ html, body {
     width: 20em;
 }
 
+
 .claro .resultsPanelCenter {
     background-color: #000000;
     color: #ffffff;
     width: 20em;
 }
 
-.claro .businessInfluenceVal {
-    padding: 12px 18px 14px 18px;
-}
-.sliderText {
-    color: #000000;
-
-}
 
 .userControls {
     border-radius: 4px;
@@ -350,19 +361,7 @@ html, body {
     padding: 2px 8px 4px 8px;
 }
 
-#findType {
-    border-radius: 4px;
-    -moz-border-radius: 4px 4px 4px 4px;
-    padding: 2px 8px 4px 8px;
-    color: #000000;
-}
 
-.userControlsText {
-    border-radius: 4px;
-    -moz-border-radius: 4px 4px 4px 4px;
-    padding: 2px 8px 4px 8px;
-    width: 2em;
-}
 
 #loader {
     position: absolute;

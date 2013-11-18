@@ -22,7 +22,7 @@ define([], function () {
 
         "gpUrl": "http://utilities-vm:6080/arcgis/rest/services/IsolationTrace/GPServer/IsolationTrace",
         "gpOutput": "Isolating_Valves,Isolated_Hydrants",
-        "tabContent": "0", 
+        "tabContent": "----", 
         "storeResults": true
 
     };
