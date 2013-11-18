@@ -230,16 +230,18 @@ html, body {
 }
 
 .claro .dijitTabContainerTop-dijitContentPane {
-   background-color: #666;
+    background-color: #666;
     background-color: rgba(102,102,102,0.80);
     color: #ffffff;
-        font-size: 52pt;
+    font-size: 52pt;
     
     text-align: center;
-    line-height: 100px;
-   
+ overflow:hidden;
 }
+.claro .dijitButton {
+background-color:  rgba(102,102,102,0.80);
 
+}
 .claro .dijitChecked.dijitTab .tabLabel {
     /**/
 }

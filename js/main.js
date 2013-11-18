@@ -24,7 +24,9 @@ define([
      "esri/symbols/TextSymbol",
      "esri/geometry/Multipoint",
      "dijit/layout/TabContainer",
-     "dijit/layout/ContentPane"
+     "dijit/layout/ContentPane",
+     "dijit/form/Button",
+     "dojo/dom-construct"
 
 ],
 function (
@@ -53,7 +55,9 @@ function (
     TextSymbol,
     Multipoint,
     TabContainer,
-    ContentPane
+    ContentPane,
+    Button,
+    domConstruct
 ) {
     return declare("", null, {
         config: {},
@@ -69,7 +73,7 @@ function (
         },
         _mapLoaded: function () {
             // Map is ready
-           
+
             this._initMap();
 
             dojo.connect(window, "onresize", this._resizeTabs);
@@ -91,7 +95,7 @@ function (
             console.log('Init Code Completed');
             dojo.style("loader", "display", "none");
             console.log('Loader Hidden');
-          
+
         },
         _initPage: function () {
 
@@ -214,25 +218,25 @@ function (
             this.cps = [];
             if (parts.length > 0) {
                 array.forEach(parts, function (results) {
-                      
+
                     var cp1 = new ContentPane({
 
-                       title: results.replace("_"," "),
-                       content: this.config.tabContent,
-                       name: results ,
-                       id: results + "CP"
-                       
-                    });
-                    
+                        title: results.replace("_", " "),
+                        content: this.config.tabContent,
+                        name: results,
+                        id: results + "CP"
 
-                   this.cps.push(cp1);
-                   this.tc.addChild(cp1);
+                    });
+
+
+                    this.cps.push(cp1);
+                    this.tc.addChild(cp1);
                 }
-                ,this);
+                , this);
             }
             this.tc.startup();
             this.tc.resize();
-            
+
         },
         _createToolbar: function () {
             this.toolbar = new Draw(this.map);
@@ -387,8 +391,8 @@ function (
                 this.resultLayer.add(feature);
                 this.multiPoint.addPoint(feature.geometry);
 
-              
-                
+
+
                 //if (typeof feature.getDojoShape == 'function') {
                 //    feature.getDojoShape().moveToFront();
                 //}
@@ -398,13 +402,31 @@ function (
             //var cp = dojo.byId(result.paramName + "CP");
             //cp.innerHTML = resultfeatures.length;
 
-            var cp = dijit.byId(result.paramName + "CP");
-            cp.set("content", String(resultfeatures.length));
 
+
+            var cp = dijit.byId(result.paramName + "CP");
+            cp.set("content", "");
+
+            var lbl = domConstruct.create('label', { "for": result.paramName + "Btn", 'innerHTML': String(resultfeatures.length) + " " + result.paramName.replace("_", " ") + " returned in trace: " }, cp.containerNode);
+
+            var div1 = domConstruct.create('div', { "id": result.paramName + "Btn" }, cp.containerNode);
+            // build more html using domConstruct, like a table etc
+            var btn = new Button({
+                label: 'Save', "id": result.paramName + "Btn2"
+            }, div1);
+
+            dojo.connect(btn, "onClick", lang.hitch(this, this._saveBtn(resultfeatures)));
 
 
         },
+        _saveBtn: function (buttonInfo) {
+            return function (e) {
+                alert(buttonInfo);
+                var FL = new FeatureLayer('http://services1.arcgis.com/ix9EcElgUzvEWNbb/arcgis/rest/services/TraceResults/FeatureServer/0');
 
+                FL.applyEdits(buttonInfo, null, null);
+            }
+        },
         _initMap: function () {
             console.log("InitMap");
             this.gp = new esri.tasks.Geoprocessor(this.config.gpUrl);
