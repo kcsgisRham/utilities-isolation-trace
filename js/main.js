@@ -421,10 +421,26 @@ function (
         },
         _saveBtn: function (buttonInfo) {
             return function (e) {
-                alert(buttonInfo);
-                var FL = new FeatureLayer('http://services1.arcgis.com/ix9EcElgUzvEWNbb/arcgis/rest/services/TraceResults/FeatureServer/0');
+              
+                //var fs = [];
 
-                FL.applyEdits(buttonInfo, null, null);
+                //array.forEach(buttonInfo, lang.hitch(this,function (feature) {
+                //    fs.push(  new Graphic(feature.geometry));
+
+                //}));
+                    var editDeferred = this.ValveResults.layerObject.applyEdits(buttonInfo, null, null);
+               
+
+               editDeferred.addCallback(lang.hitch(this, function (result) {
+                   console.log(result);
+                   this.ValveResults.layerObject.refresh();
+                   this.ValveResults.layerObject.redraw();
+                  
+               }));
+               editDeferred.addErrback(function (error) {
+                   console.log(error);
+               });
+
             }
         },
         _initMap: function () {
@@ -443,6 +459,20 @@ function (
             this.resultLayer.setRenderer(this.valveRend);
 
             this.map.addLayers([this.flagLayer, this.barrierLayer, this.resultLayer]);
+            array.forEach(this.layers, function (layer) {
+
+
+
+                    if (layer.title == "System Valve Trace Results") {
+                        this.ValveResults = layer;
+                        
+
+                    }
+             
+            
+
+            }, this);
+
         },
         //create a map based on the input web map id
         _createWebMap: function () {

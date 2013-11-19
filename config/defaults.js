@@ -4,13 +4,13 @@ define([], function () {
     //and url parameters.
     var defaults = {
         "appid": "",
-        "webmap": "067b19e4be4d4b04a6443a4fd47c86a3", 
+        "webmap": "067b19e4be4d4b04a6443a4fd47c86a3",
         "oauthappid": null, //"AFTKRmv16wj14N3z",
         //Group templates must support a group url parameter. This will contain the id of the group. 
         //group: "",
         //Enter the url to the proxy if needed by the applcation. See the 'Using the proxy page' help topic for details
         //http://developers.arcgis.com/en/javascript/jshelp/ags_proxy.html
-        "proxyurl": "",
+        "proxyurl": "http://localhost/proxy/auth_proxy.ashx",
         //Example of a template specific property. If your template had several color schemes
         //you could define the default here and setup configuration settings to allow users to choose a different
         //color theme.  
