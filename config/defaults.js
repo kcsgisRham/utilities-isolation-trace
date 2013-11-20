@@ -22,9 +22,10 @@ define([], function () {
 
         "gpUrl": "http://utilities-vm:6080/arcgis/rest/services/IsolationTrace/GPServer/IsolationTrace",
         "gpOutput": "Isolating_Valves,Isolated_Hydrants",
-        "tabContent": "----", 
-        "storeResults": true
-
+        "tabContent": "----",
+        "gpResultLayers": "System Valve Trace Results,Hydrant Trace Results",
+        "gpResultText": "{Count} Valves Returned in Trace, {Count} Hydrants Returned in Trace"
+        
     };
     return defaults;
 });

@@ -73,12 +73,8 @@ function (
         },
         _mapLoaded: function () {
             // Map is ready
-
             this._initMap();
-
-            dojo.connect(window, "onresize", this._resizeTabs);
             console.log('Map Initilized');
-
             console.log('map loaded');
             this._createLocatorButton();
             console.log('Locator Created');
@@ -90,7 +86,6 @@ function (
             console.log('Toolbar Created');
             this._createTabs();
             console.log('Tabs Created');
-
 
             console.log('Init Code Completed');
             dojo.style("loader", "display", "none");
@@ -114,8 +109,6 @@ function (
                     document.getElementById("barrierButton").className = "barrierButtonNotPressed";
 
                     this.acticeBarrier = false;
-
-
                 }
                 else {
                     document.getElementById("flagButton").className = "flagButtonNotPressed";
@@ -135,8 +128,6 @@ function (
                     document.getElementById("flagButton").className = "flagButtonNotPressed";
 
                     this.acticeFlag = false;
-
-
                 }
                 else {
                     document.getElementById("barrierButton").className = "barrierButtonNotPressed";
@@ -207,24 +198,19 @@ function (
 
 
         },
-        _resizeTabs: function () {
-            //this.tc.resize();
-            console.log("");
-        },
         _createTabs: function () {
-            this.tc = new TabContainer({ name: "panelResultsTab", }, "panelResultsTab");
+            this.tc = new TabContainer({ name: "panelResultsTab" }, "panelResultsTab");
 
-            var parts = this.config.gpOutput.split(",");
             this.cps = [];
-            if (parts.length > 0) {
-                array.forEach(parts, function (results) {
+            array.forEach(this.traceFeatures, function (traceFeature) {
+
+          
 
                     var cp1 = new ContentPane({
-
-                        title: results.replace("_", " "),
+                        title: traceFeature.GPParam.replace("_", " "),
                         content: this.config.tabContent,
-                        name: results,
-                        id: results + "CP"
+                        name: traceFeature.GPParam,
+                        id: traceFeature.GPParam + "CP"
 
                     });
 
@@ -233,7 +219,7 @@ function (
                     this.tc.addChild(cp1);
                 }
                 , this);
-            }
+            
             this.tc.startup();
             this.tc.resize();
 
@@ -346,31 +332,54 @@ function (
             console.log(jobInfo.results);
             this.resultLayer.clear();
             this.multiPoint = new Multipoint(this.map.spatialReference);
-            var parts = this.config.gpOutput.split(",");
-            this.gpDef = [];
-            this.resultsCnt = 0;
 
-            if (parts.length > 0) {
-                array.forEach(parts, function (results) {
-                    this.resultsCnt = this.resultsCnt + 1;
+  
 
-                    this.gpDef.push(this.gp.getResultData(jobInfo.jobId, results, lang.hitch(this, this._addFeatures), lang.hitch(this, this._errFeatures)).then(lang.hitch(this, function () {
-                        this.resultsCnt = this.resultsCnt - 1
 
-                        if (this.resultsCnt == 0) {
+            array.forEach(this.traceFeatures, function (traceFeature) {
 
-                            dojo.style("loader", "display", "none");
-                            document.getElementById("executeButton").className = "executeButton";
-                            var ext = this.multiPoint.getExtent();
-                            if (ext) {
-                                this.map.setExtent(ext.expand(1.5));
-                            }
+                this.resultsCnt = this.resultsCnt + 1;
+                var def;
+
+                def = this.gp.getResultData(jobInfo.jobId, traceFeature.GPParam, lang.hitch(this, this._addFeatures), lang.hitch(this, this._errFeatures)).then(lang.hitch(this, function () {
+                    this.resultsCnt = this.resultsCnt - 1
+
+                    if (this.resultsCnt == 0) {
+
+                        dojo.style("loader", "display", "none");
+                        document.getElementById("executeButton").className = "executeButton";
+                        var ext = this.multiPoint.getExtent();
+                        if (ext) {
+                            this.map.setExtent(ext.expand(1.5));
                         }
-                    })));
+                    }
+                }));
+                
+
+            }, this);
 
 
-                }, this);
-            }
+            //if (parts.length > 0) {
+            //    array.forEach(parts, function (results) {
+            //        this.resultsCnt = this.resultsCnt + 1;
+
+            //        this.gpDef.push(this.gp.getResultData(jobInfo.jobId, results, lang.hitch(this, this._addFeatures), lang.hitch(this, this._errFeatures)).then(lang.hitch(this, function () {
+            //            this.resultsCnt = this.resultsCnt - 1
+
+            //            if (this.resultsCnt == 0) {
+
+            //                dojo.style("loader", "display", "none");
+            //                document.getElementById("executeButton").className = "executeButton";
+            //                var ext = this.multiPoint.getExtent();
+            //                if (ext) {
+            //                    this.map.setExtent(ext.expand(1.5));
+            //                }
+            //            }
+            //        })));
+
+
+            //    }, this);
+            //}
 
 
         },
@@ -383,10 +392,19 @@ function (
         },
         _addFeatures: function (result, messages) {
             console.log(result.paramName);
+            var selectedTraceFeature;
 
-            var resultfeatures = result.value.features;
-            for (var f = 0, fl = resultfeatures.length; f < fl; f++) {
-                var feature = resultfeatures[f];
+            array.forEach(this.traceFeatures, function (traceFeature) {
+                if (result.paramName == traceFeature.GPParam) {
+                    
+                    selectedTraceFeature = traceFeature;
+                }
+            });
+
+            var resultFeatures = result.value.features;
+            selectedTraceFeature.results = resultFeatures;
+            for (var f = 0, fl = resultFeatures.length; f < fl; f++) {
+                var feature = resultFeatures[f];
                 feature.setSymbol(this.valveSymbol);
                 this.resultLayer.add(feature);
                 this.multiPoint.addPoint(feature.geometry);
@@ -407,42 +425,35 @@ function (
             var cp = dijit.byId(result.paramName + "CP");
             cp.set("content", "");
 
-            var lbl = domConstruct.create('label', { "for": result.paramName + "Btn", 'innerHTML': String(resultfeatures.length) + " " + result.paramName.replace("_", " ") + " returned in trace: " }, cp.containerNode);
+            var replace = /{Count}/gi;
+            var count = resultFeatures.length;
+           var outputText = selectedTraceFeature.displayText.replace(/{Count}/gi, count);
 
+
+
+           
+            var lbl = domConstruct.create('label', { "for": result.paramName + "Btn", 'innerHTML': outputText }, cp.containerNode);
+         
             var div1 = domConstruct.create('div', { "id": result.paramName + "Btn" }, cp.containerNode);
             // build more html using domConstruct, like a table etc
+
+
             var btn = new Button({
                 label: 'Save', "id": result.paramName + "Btn2"
+              
             }, div1);
 
-            dojo.connect(btn, "onClick", lang.hitch(this, this._saveBtn(resultfeatures)));
-
+            dojo.connect(btn, "onClick", lang.hitch(this, this._saveBtn(selectedTraceFeature)));
 
         },
         _saveBtn: function (buttonInfo) {
             return function (e) {
-              
-                //var fs = [];
-
-                //array.forEach(buttonInfo, lang.hitch(this,function (feature) {
-                //    fs.push(  new Graphic(feature.geometry));
-
-                //}));
-                    var editDeferred = this.ValveResults.layerObject.applyEdits(buttonInfo, null, null);
-               
-
-               editDeferred.addCallback(lang.hitch(this, function (result) {
-                   console.log(result);
-                   this.ValveResults.layerObject.refresh();
-                   this.ValveResults.layerObject.redraw();
-                  
-               }));
-               editDeferred.addErrback(function (error) {
-                   console.log(error);
-               });
-
+                alert(buttonInfo);
+                
+                buttonInfo.layer.applyEdits(buttonInfo.results, null, null);
             }
         },
+
         _initMap: function () {
             console.log("InitMap");
             this.gp = new esri.tasks.Geoprocessor(this.config.gpUrl);
@@ -459,20 +470,58 @@ function (
             this.resultLayer.setRenderer(this.valveRend);
 
             this.map.addLayers([this.flagLayer, this.barrierLayer, this.resultLayer]);
-            array.forEach(this.layers, function (layer) {
+
+            this.traceFeatures = [];
+
+            this.GPModelParams = this.config.gpOutput.split(",");
+            this.saveToLayerNames = this.config.gpResultLayers.split(",");
+
+            this.displayText = this.config.gpResultText.split(",");
 
 
+            for (var f = 0, fl = this.GPModelParams.length ; f < fl; f++) {
 
-                    if (layer.title == "System Valve Trace Results") {
-                        this.ValveResults = layer;
-                        
+                var traceFeature = {};
+                traceFeature.GPParam = this.GPModelParams[f];
+                traceFeature.saveToLayerName = this.saveToLayerNames[f]
+                traceFeature.displayText = this.displayText[f]
 
+
+                array.forEach(this.layers, lang.hitch(this, function (layer) {
+                    if (layer.title = traceFeature.saveToLayerName) {
+                        traceFeature.saveToLayer = layer;
+                        console.log(traceFeature.saveToLayerName + " " + "Set");
                     }
-             
-            
 
-            }, this);
+                }))
 
+
+                this.traceFeatures.push(traceFeature);
+            }
+
+
+
+
+
+
+            //array.forEach(this.layers, lang.hitch(this, function (layer) {
+            //    if (layer.title.indexOf(this.layerParts[0]) != -1) {
+            //        this.isolatedValves = layer;
+            //        console.log(this.isolatedValves.title + " " + "Set");
+            //    }
+
+            //    else if (layer.title.indexOf(this.layerParts[1]) != -1) {
+            //        this.isolatedHydrants = layer;
+            //        console.log(this.isolatedHydrants.title + " " + "Set");
+            //    }
+            //    else {
+            //        console.log(layer.title + " " + "Not Result Layer");
+            //    }
+            //}))
+
+            // console.log(layer + " Added"); 
+            //if (layer.title == "System Valve Trace Results") {
+            //    this.ValveResults = layer;
         },
         //create a map based on the input web map id
         _createWebMap: function () {
