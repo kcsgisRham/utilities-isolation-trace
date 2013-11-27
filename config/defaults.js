@@ -37,7 +37,7 @@ define([], function () {
                         "size": 22,
                         "angle": 0,
                         "xoffset": 0,
-                        "yoffset": -2,
+                        "yoffset": -1,
                         "outline":
                          {
                              "color": [255, 0, 0, 255],

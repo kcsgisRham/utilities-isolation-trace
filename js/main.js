@@ -211,6 +211,7 @@ function (
 
             this.geoLocate.startup();
         },
+
         _createGeocoder: function () {
 
             this.geocoder = new Geocoder({
@@ -231,6 +232,12 @@ function (
             this.geocoder.startup();
 
 
+        },
+        _showAllResultLayers: function () {
+            array.forEach(this.resultLayers, function (layer) {
+                layer.setVisibility(true);
+
+            });
         },
         _createStackCont: function () {
             this.sc = new StackContainer({
@@ -254,10 +261,7 @@ function (
             cp.startup();
             cp.on('show', lang.hitch(this, function (ent) {
 
-                array.forEach(this.resultLayers, function (layer) {
-                    layer.setVisibility(true);
-
-                });
+                this._showAllResultLayers();
 
 
             }));
@@ -655,6 +659,9 @@ function (
 
             }
             console.log(message.jobInfo.results);
+            var cpSum = dijit.byId("summaryCP");
+
+            cpSum.set("content", "");
             this._clearResultLayers();
 
 
@@ -677,6 +684,8 @@ function (
                         if (ext) {
                             this.map.setExtent(ext.expand(1.5));
                         }
+                        this._showAllResultLayers();
+                        this.sc.selectChild(this.cps[0]);
                     }
                 }));
 
@@ -716,8 +725,7 @@ function (
                 datePattern: 'MM d, y'
             });
 
-        },
-       
+        },      
         _contentPaneShown: function (paneID) {
             return function () {
 
