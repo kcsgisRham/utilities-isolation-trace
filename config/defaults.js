@@ -27,16 +27,61 @@ define([], function () {
                 "GPParam": "Isolating_Valves",
                 "saveToLayerName": "System Valve Trace Results",
                 "summaryText": "{Count} Valves Returned in Trace",
-                "displayText": "{FACILITYID} blah blah, {DIAMETER} Bob us yyur ouncley",
-                "addSkipButton": true
+                "displayText": "{DIAMETER} inch Valve: {FACILITYID}",
+                "highlightSymbol":
+                    {
+
+                        "type": "esriSMS",
+                        "style": "esriSMSCircle",
+                        "color": [0, 0, 0, 0],
+                        "size": 22,
+                        "angle": 0,
+                        "xoffset": 0,
+                        "yoffset": -2,
+                        "outline":
+                         {
+                             "color": [255, 0, 0, 255],
+                             "width": 4
+                         }
+
+
+                    },
+                "bypassDetails":
+                    {
+                        "skipable": true,
+                        "IDField": "FACILITYID"
+                    }
             },
             {
                 "GPParam": "Isolated_Hydrants",
                 "saveToLayerName": "Hydrant Trace Results",
-                "summaryText": "{Count} Valves Returned in Trace",
+                "summaryText": "{Count} hydrants Returned in Trace",
                 "displayText": "{FACILITYID} blah blah",
-                "addSkipButton": false
-               
+                "highlightSymbol":
+                    {
+
+                        "type": "esriSMS",
+                        "style": "esriSMSCircle",
+                        "color": [0, 0, 0, 0],
+                        "size": 22,
+                        "angle": 0,
+                        "xoffset": 0,
+                        "yoffset": -2,
+                        "outline":
+                         {
+                             "color": [255, 255, 0, 255],
+                             "width": 4
+                         }
+
+
+
+                    },
+                "bypassDetails":
+                     {
+                         "skipable": false,
+                         "IDField": ""
+                     }
+
 
             },
              {
@@ -44,16 +89,35 @@ define([], function () {
                  "saveToLayerName": "Customer Trace Results",
                  "summaryText": "{Count} Customers Returned in Trace",
                  "displayText": "{FACILITYID} blah blah",
-                 "addSkipButton": false
+                 "highlightSymbol":
+                    {
 
+                        "type": "esriSMS",
+                        "style": "esriSMSCircle",
+                        "color": [0, 0, 0, 0],
+                        "size": 22,
+                        "angle": 0,
+                        "xoffset": 0,
+                        "yoffset": -2,
+                        "outline":
+                         {
+                             "color": [122, 122, 255, 255],
+                             "width": 4
+                         }
+
+
+                    },
+                 "bypassDetails":
+                      {
+                          "skipable": false,
+                          "IDField": ""
+                      }
 
              }
         ],
-        //"GPParam": "Isolating_Valves,Isolated_Hydrants",
-        //"SaveToLayerName": "System Valve Trace Results,Hydrant Trace Results",
-        //"DisplayText": "{Count} Valves Returned in Trace, {Count} Hydrants Returned in Trace"
-         
-        
+      
+
+
     };
     return defaults;
 });

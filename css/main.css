@@ -350,23 +350,37 @@ _background-image: none;
   outline:none;
     border: 0px;
     
-
+    margin-left:5px;
+    margin-right:5px;
 }
+
 .claro .dijitButtonNode {
     outline:none;
   
     border: 0px;
    
 }
-.resultItemButtonIcon {
+.resultItemButtonSkipIcon {
 
     background-image: url("../images/skip.png");
     background-color: rgba(102,102,102,0.80);
 
 }
-.resultItemButtonIconSelected {
+.resultItemButtonSkipIconSelected {
 
     background-image: url("../images/skip.png");
+ background-color: rgba(255,0,0,0.80);
+
+}
+.resultItemButtonZoomIcon {
+
+    background-image: url("../images/ZoomTo.png");
+    background-color: rgba(102,102,102,0.80);
+
+}
+.resultItemButtonZoomIconSelected {
+
+    background-image: url("../images/ZoomTo.png");
  background-color: rgba(255,0,0,0.80);
 
 }
