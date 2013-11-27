@@ -1,3 +1,15 @@
+@import "//js.arcgis.com/3.7/js/dojox/grid/resources/Grid.css";
+@import "//js.arcgis.com/3.7/js/dojox/grid/resources/claroGrid.css";
+
+.dojoxGrid table {
+    margin: 0;
+}
+
+.dojoxGrid {
+    width: 45em;
+    height: 20em;
+}
+
 html, body {
     padding: 0;
     margin: 0;
@@ -22,180 +34,17 @@ html, body {
     width: 60%;
 }
 
-#LocateButton {
+.LocateButton .zoomLocateButton {
+    background-image: url("../images/locate_dark.png");
+    background-color: #ffffff;
+    border: 2px solid #666;
+    width: 26px;
+    height: 26px;
     position: absolute;
     top: 95px;
     left: 20px;
     z-index: 50;
 }
-
-
-.flagButtonNotPressed {
-    position: absolute;
-    top: 135px;
-    left: 20px;
-    z-index: 50;
-    padding: 2px;
-    width: 30px;
-    height: 30px;
-    background-color: #666;
-    background-color: rgba(102,102,102,0.80);
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    cursor: pointer;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    -o-border-radius: 5px;
-    border-radius: 5px;
-    background-image: url("../images/flag.png");
-    background-position: center center;
-    background-repeat: no-repeat;
-}
-.flagButtonPressed {
-    position: absolute;
-    top: 135px;
-    left: 20px;
-    z-index: 50;
-    padding: 2px;
-    width: 30px;
-    height: 30px;
-    background-color: #f00;
-    background-color: rgba(255,0,0,0.80);
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    cursor: pointer;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    -o-border-radius: 5px;
-    border-radius: 5px;
-    background-image: url("../images/flag.png");
-    background-position: center center;
-    background-repeat: no-repeat;
-
-}
-.barrierButtonNotPressed {
-    position: absolute;
-    top: 175px;
-    left: 20px;
-    z-index: 50;
-    padding: 2px;
-    width: 30px;
-    height: 30px;
-    background-color: #666;
-    background-color: rgba(102,102,102,0.80);
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    cursor: pointer;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    -o-border-radius: 5px;
-    border-radius: 5px;
-    background-image: url("../images/Barrier.png");
-    background-position: center center;
-    background-repeat: no-repeat;
-}
-.barrierButtonPressed {
-    position: absolute;
-    top: 175px;
-    left: 20px;
-    z-index: 50;
-    padding: 2px;
-    width: 30px;
-    height: 30px;
-    background-color: #f00;
-    background-color: rgba(255,0,0,0.80);
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    cursor: pointer;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    -o-border-radius: 5px;
-    border-radius: 5px;
-    background-image: url("../images/Barrier.png");
-    background-position: center center;
-    background-repeat: no-repeat;
-}
-.executeButton {
-    position: absolute;
-    top: 215px;
-    left: 20px;
-    z-index: 50;
-    padding: 2px;
-    width: 30px;
-    height: 30px;
-    background-color: #666;
-    background-color: rgba(102,102,102,0.80);
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    cursor: pointer;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    -o-border-radius: 5px;
-    border-radius: 5px;
-    background-image: url("../images/trace.png");
-    background-position: center center;
-    background-repeat: no-repeat;
-}
-
-.executeButtonProcess {
-    position: absolute;
-    top: 215px;
-    left: 20px;
-    z-index: 50;
-    padding: 2px;
-    width: 30px;
-    height: 30px;
-    background-color: #666;
-    background-color: rgba(102,102,102,0.80);
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    cursor: pointer;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    -o-border-radius: 5px;
-    border-radius: 5px;
-    background-image: url("../images/locate-spinner.gif");
-    background-position: center center;
-    background-repeat: no-repeat;
-}
-
-
-.clearButton {
-    position: absolute;
-    top: 255px;
-    left: 20px;
-    z-index: 50;
-    padding: 2px;
-    width: 30px;
-    height: 30px;
-    background-color: #666;
-    background-color: rgba(102,102,102,0.80);
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    cursor: pointer;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    -o-border-radius: 5px;
-    border-radius: 5px;
-    background-image: url("../images/erase.png");
-    background-position: center center;
-    background-repeat: no-repeat;
-}
-
 
 
 /* customize geocoder appearance */
@@ -229,7 +78,7 @@ html, body {
     height: 100%;
 }
 
-.claro .dijitTabContainerTop-dijitContentPane {
+/*.claro .dijitTabContainerTop-dijitContentPane {
     background-color: #666;
     background-color: rgba(102,102,102,0.80);
     color: #ffffff;
@@ -237,13 +86,10 @@ html, body {
     
     text-align: center;
  overflow:hidden;
-}
-.claro .dijitButton {
-background-color:  rgba(102,102,102,0.80);
+}*/
 
-}
-.claro .dijitChecked.dijitTab .tabLabel {
-    /**/
+/*.claro .dijitChecked.dijitTab .tabLabel {
+  
 }
 .claro .dijitTabChecked {
       background-color: yellow !important;
@@ -260,7 +106,7 @@ background-color:  rgba(102,102,102,0.80);
     -ms-user-select: none;
     user-select: none;
     outline: 0;
-}
+}*/
 .claro .edgePanelBottom {
     background-color: #000000;
     filter: alpha(opacity=70);
@@ -279,6 +125,7 @@ background-color:  rgba(102,102,102,0.80);
     opacity: 0.70;
     background-color: #000000;
     color: #ffffff;
+    height: 50px;
 }
 
 .claro .edgePanelCenter {
@@ -317,7 +164,7 @@ background-color:  rgba(102,102,102,0.80);
     background: url("images/break.png") no-repeat;
 }
 
-.claro .dijitTabContainer{
+.claro .dijitTabContainer {
     position: relative;
     height: 100%;
     width: 100%;
@@ -330,17 +177,48 @@ background-color:  rgba(102,102,102,0.80);
     font-size: 14pt;
 }
 
+.claro .resultItem {
+    width: 100%;
+    line-height: 45px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    outline: none;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-image: none;
+    _background-image: none;
+    border: 0px;
+}
+
+.claro .resultPane {
+    font-size: 12pt;
+    height: 80%;
+    width: 100%;
+    margin-top: 2px;
+    margin-bottom: 4px;
+    padding: 0px;
+    color: #ffffff;
+    border-width: 2px;
+    border-style: solid;
+    border-color: rgba(102,102,102,0.80);
+    border-radius: 2px 2px 2px 2px;
+    -moz-border-radius: 2px 2px 2px 2px;
+}
 
 .panelInfo {
-    position:relative;
+    position: relative;
     font-size: 12pt;
-    color: #ffffff; 
+    color: #ffffff;
 }
+
 .panelInfoLabel {
-     position:relative;
+    position: relative;
     font-size: 18pt;
     color: #ffffff;
-    float: left; 
+    float: left;
 }
 
 .claro .resultsPanelLeft {
@@ -367,11 +245,169 @@ background-color:  rgba(102,102,102,0.80);
 
 #loader {
     position: absolute;
-    background: url("images/preloader.gif") no-repeat;
+    background: url("./images/preloader.gif") no-repeat;
     z-index: 250;
     width: 65px;
     height: 50px;
     left: 50%;
     top: 50%;
     display: none;
+}
+
+.claro * {
+    outline: none;
+}
+/*.claro .dijitButtonActive , .claro .dijitDropDownButtonActive , .claro .dijitComboButtonActive , .claro .dijitToggleButtonActive , .claro .dijitToggleButtonChecked  {
+border: 1px solid #759dc0;
+     border-radius: 4px;
+    -moz-border-radius: 4px 4px 4px 4px;
+padding: 2px 4px 4px 4px;
+color: #ffffff;
+-moz-border-radius: 1px;
+border-radius: 1px;
+-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
+-moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
+box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
+background-color:  rgba(102,102,102,0.80);
+background-image: none;
+background-image: -moz-linear-gradient(#D3D3D3 0px, rgba(211, 211, 211, 0) 1px, rgba(211, 211, 211, 0.75) 100%);
+background-image: -webkit-linear-gradient(#D3D3D3 0px, rgba(211, 211, 211, 0) 1px, rgba(211, 211, 211, 0.75) 100%);
+background-image: -o-linear-gradient(#D3D3D3 0px, rgba(211, 211, 211, 0) 1px, rgba(211, 211, 211, 0.75) 100%);
+background-image: linear-gradient(#D3D3D3 0px, rgba(211, 211, 211, 0) 1px, rgba(211, 211, 211, 0.75) 100%);
+_background-image: none;
+ -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.claro .dijitButton .dijitButtonNode, .claro .dijitDropDownButton .dijitButtonNode, .claro .dijitComboButton .dijitButtonNode, .claro .dijitToggleButton .dijitButtonNode {
+border: 1px solid #759dc0;
+padding: 2px 4px 4px 4px;
+color: #ffffff;
+-moz-border-radius: 1px;
+border-radius: 1px;
+-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
+-moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
+box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
+background-color:  rgba(102,102,102,0.80);
+background-image: none;
+background-image: -moz-linear-gradient(#D3D3D3 0px, rgba(211, 211, 211, 0) 1x, rgba(211, 211, 211, 0.75) 100%);
+background-image: -webkit-linear-gradient(#D3D3D3 0px, rgba(211, 211, 211, 0) 1px, rgba(211, 211, 211, 0.75) 100%);
+background-image: -o-linear-gradient(#ffffff 0px, rgba(211, 211, 211, 0) 1px, rgba(211, 211, 211, 0.75) 100%);
+background-image: linear-gradient(#ffffff 0px, rgba(211, 211, 211, 0) 1px, rgba(211, 211, 211, 0.75) 100%);
+_background-image: none;
+ -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}*/
+
+
+.customBigIcon {
+    width: 40px;
+    height: 40px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -o-border-radius: 5px;
+    border-radius: 5px;
+    outline: none;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+/*claro .dijitButton .dijitButtonNode, .claro .dijitDropDownButton .dijitButtonNode, .claro .dijitComboButton .dijitButtonNode, .claro .dijitToggleButton .dijitButtonNode {
+border:0px;
+padding: 0px 0px 0px 0px;
+background-image: none;
+background-image: none;
+background-image: none;
+background-image: none;
+_background-image: none;
+}*/
+.resultItemButton{
+   
+      padding: 0px;
+    width: 40px;
+    height: 40px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -o-border-radius: 5px;
+    border-radius: 5px;
+    outline: none;
+    background-position: center center;
+    background-repeat: no-repeat;
+    
+  outline:none;
+    border: 0px;
+    
+
+}
+.claro .dijitButtonNode {
+    outline:none;
+  
+    border: 0px;
+   
+}
+.resultItemButtonIcon {
+
+    background-image: url("../images/skip.png");
+    background-color: rgba(102,102,102,0.80);
+
+}
+.resultItemButtonIconSelected {
+
+    background-image: url("../images/skip.png");
+ background-color: rgba(255,0,0,0.80);
+
+}
+.resultItemLabel {
+      padding-left: 10px;
+}
+/*background-image: -moz-linear-gradient(#ffffff 0px, rgba(255, 255, 255, 0) 3px, rgba(255, 255, 255, 0.75) 100%);
+background-image: -webkit-linear-gradient(#ffffff 0px, rgba(255, 255, 255, 0) 3px, rgba(255, 255, 255, 0.75) 100%);
+background-image: -o-linear-gradient(#ffffff 0px, rgba(255, 255, 255, 0) 3px, rgba(255, 255, 255, 0.75) 100%);
+background-image: linear-gradient(#ffffff 0px, rgba(255, 255, 255, 0) 3px, rgba(255, 255, 255, 0.75) 100%);*/
+.flagIcon {
+    background-image: url("../images/flag.png");
+    background-color: rgba(102,102,102,0.80);
+}
+
+.flagIconSelected {
+    background-image: url("../images/flag.png");
+    background-color: rgba(255,0,0,0.80);
+}
+
+.barrierIcon {
+    background-image: url("../images/barrier.png");
+    background-color: rgba(102,102,102,0.80);
+}
+
+.barrierIconSelected {
+    background-image: url("../images/barrier.png");
+    background-color: rgba(255,0,0,0.80);
+}
+
+.clearIcon {
+    background-image: url("../images/erase.png");
+    background-color: rgba(102,102,102,0.80);
+}
+
+.traceIcon {
+    background-image: url("../images/trace.png");
+    background-color: rgba(102,102,102,0.80);
+}
+
+.traceIconProcessing {
+    background-image: url("../images/loader.gif");
+    background-color: rgba(102,102,102,0.80);
 }

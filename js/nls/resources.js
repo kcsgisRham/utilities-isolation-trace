@@ -26,7 +26,11 @@ define({
             title: "Trace App",
             
         }
-
+        ,
+        gp:
+            {
+                failed: "The trace could not be completed, please try again.",
+            }
 
     }),
     "fr": 1

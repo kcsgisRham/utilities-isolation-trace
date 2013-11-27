@@ -20,11 +20,39 @@ define([], function () {
 
         "geometryUrl": "http://tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer",
 
-        "gpUrl": "http://utilities-vm:6080/arcgis/rest/services/IsolationTrace/GPServer/IsolationTrace",
-        "gpOutput": "Isolating_Valves,Isolated_Hydrants",
+        "gpUrl": "http://localhost:6080/arcgis/rest/services/IsolationTrace/GPServer/IsolationTrace",
         "tabContent": "----",
-        "gpResultLayers": "System Valve Trace Results,Hydrant Trace Results",
-        "gpResultText": "{Count} Valves Returned in Trace, {Count} Hydrants Returned in Trace"
+        "appParams": [
+            {
+                "GPParam": "Isolating_Valves",
+                "saveToLayerName": "System Valve Trace Results",
+                "summaryText": "{Count} Valves Returned in Trace",
+                "displayText": "{FACILITYID} blah blah, {DIAMETER} Bob us yyur ouncley",
+                "addSkipButton": true
+            },
+            {
+                "GPParam": "Isolated_Hydrants",
+                "saveToLayerName": "Hydrant Trace Results",
+                "summaryText": "{Count} Valves Returned in Trace",
+                "displayText": "{FACILITYID} blah blah",
+                "addSkipButton": false
+               
+
+            },
+             {
+                 "GPParam": "Isolated_Customers",
+                 "saveToLayerName": "Customer Trace Results",
+                 "summaryText": "{Count} Customers Returned in Trace",
+                 "displayText": "{FACILITYID} blah blah",
+                 "addSkipButton": false
+
+
+             }
+        ],
+        //"GPParam": "Isolating_Valves,Isolated_Hydrants",
+        //"SaveToLayerName": "System Valve Trace Results,Hydrant Trace Results",
+        //"DisplayText": "{Count} Valves Returned in Trace, {Count} Hydrants Returned in Trace"
+         
         
     };
     return defaults;

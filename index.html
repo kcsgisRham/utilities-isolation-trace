@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Service Qualification</title>
+    <title>Trace</title>
     <meta charset="utf-8">
     <!--Use protocol relative urls that way if the browser is viewing the page via HTTPS the js/css file will be requested using the HTTPS protocol-->
     <link rel="stylesheet" href="//js.arcgis.com/3.7/js/dojo/dijit/themes/claro/claro.css">
     <link rel="stylesheet" type="text/css" href="//js.arcgis.com/3.7/js/esri/css/esri.css">
+    
+
     <!--Load any application specific styles-->
     <link rel="stylesheet" type="text/css" href="css/main.css">
 </head>
@@ -25,19 +27,27 @@
             <div id="mapDiv" dir="ltr"></div>
 
             <div id="LocateButton"></div>
-            <div class="flagButtonNotPressed" id="flagButton">
-            </div>
-            <div class="barrierButtonNotPressed" id="barrierButton">
-            </div>
-            <div class="executeButton" id="executeButton">
-            </div>
-            <div class="clearButton" id="clearButton">
-            </div>
+          
         </div>
-        <div class="edgePanelTop" id="titleblock" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region: 'top'">Water Network Trace</div>
-        <div class="edgePanelBottom" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region: 'bottom'">
-            <div id="panelResultsTab" class="panelResultsTab"> </div>
+        <div class="edgePanelTop" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region: 'top'">
+            <div id="toolbar1" data-dojo-type="dijit/Toolbar" style="background-color: inherit; background-image: none; border-bottom: 0px;">
+                <div data-dojo-type="dijit/form/Button" id="tools.addFlag"  data-dojo-props="baseClass:'none', iconClass:'flagIcon customBigIcon', showLabel:false"></div>
+                <div data-dojo-type="dijit/form/Button" id="tools.addBarrier" data-dojo-props="baseClass:'none', iconClass:'barrierIcon customBigIcon', showLabel:false"></div>
+                <span data-dojo-type="dijit/ToolbarSeparator"></span>
+
+                <div data-dojo-type="dijit/form/Button" id="tools.clear" baseClass="none" data-dojo-props="baseClass:'none', iconClass:'clearIcon customBigIcon', showLabel:false"></div>
+                <span data-dojo-type="dijit/ToolbarSeparator"></span>
+
+                <div data-dojo-type="dijit/form/Button" id="tools.trace" baseClass="none" data-dojo-props="baseClass:'none', iconClass:'traceIcon customBigIcon', showLabel:false"></div>
             </div>
+
+        </div>
+        <div class="edgePanelBottom" id="panelBottomResults" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region: 'bottom'">
+            <!--<div id="panelResultsTab" class="panelResultsTab">            </div>-->
+            <div id="stackContainer"></div>
+            <div id="stackControl"></div>
+
+        </div>
     </div>
 
 
@@ -63,7 +73,13 @@
 
     <script type="text/javascript" src="//js.arcgis.com/3.7/"></script>
     <script type="text/javascript">
-
+        function formatDate(value) {
+            var inputDate = new Date(value);
+            return dojo.date.locale.format(inputDate, {
+                selector: 'date',
+                datePattern: 'MM-dd-y'
+            });
+        };
         require(["dojo/parser",
                  "dijit/layout/BorderContainer",
                  "dijit/layout/ContentPane",
@@ -76,7 +92,7 @@
                  "dijit/form/HorizontalRule",
                  "dijit/form/Button",
                  "dijit/form/TextBox",
-
+                 "dijit/Toolbar",
                  "dojo/domReady!"],
                  function (parser) {
                      parser.parse();
@@ -97,7 +113,7 @@
             //from the javascript/nls/resource files. 
             //Note that we've included a placeholder nls folder and a resource file with one error string
             //to show how to setup the strings file.
-           
+
 
             var supportsLocalization = true; //defaults to true
 
