@@ -24,14 +24,16 @@ define([
      "esri/symbols/TextSymbol",
      "esri/geometry/Multipoint",
      "dijit/layout/ContentPane",
-   
+
      "dijit/form/Button",
      "dojo/dom-construct",
      "dijit/layout/StackContainer",
      "dijit/layout/StackController",
      "dojo/dom-prop",
-     
-     "dijit/form/ToggleButton", "esri/InfoTemplate"
+
+     "dijit/form/ToggleButton",
+     "esri/InfoTemplate",
+     "esri/tasks/query"
 
 ],
 function (
@@ -65,9 +67,10 @@ function (
     StackContainer,
     StackController,
     domProp,
-   
+
     ToggleButton,
-    InfoTemplate
+    InfoTemplate,
+    Query
 
 ) {
     return declare("", null, {
@@ -100,20 +103,21 @@ function (
             console.log('Locator Created');
             this._createGeocoder();
             console.log('Geocder Created');
-           console.log('Graphics Created');
 
+            console.log('Checking for Event Feature');
+            if (this._zoomToEvent()) {
 
-            console.log('Init Code Completed');
-            dojo.style("loader", "display", "none");
-            console.log('Loader Hidden');
+                console.log('Load Complete');
+
+                dojo.style("loader", "display", "none");
+                console.log('Loader Hidden');
+
+            }
 
         },
         _initPage: function () {
             var control;
-            this.acticeFlag = false;
-            this.acticeBarrier = false;
             document.title = this.config.i18n.page.title;
-            //  html.set(dojo.byId("titleblock"), this.config.i18n.ui.title);
 
 
             dojo.connect(dojo.byId("tools.addFlag"), 'onclick', lang.hitch(this, function () {
@@ -152,7 +156,7 @@ function (
                 this.geoLocate.clear();
 
                 this.map.graphics.clear();
-              
+
                 this.flagLayer.clear();
                 this.barrierLayer.clear();
                 this.skipLayer.clear();
@@ -162,6 +166,41 @@ function (
             }));
 
         },
+        _zoomToEvent: function () {
+            if (this.eventLayer != null) {
+                if (this.config.eventDetails.EventID != null) {
+                    var query = new Query();
+                    query.where = lang.replace(this.config.eventDetails.whereClause, this.config.eventDetails);
+                    //query.objectIds = this.config.eventDetails
+                    query.outFields = ["*"];
+
+                    this.eventLayer.layerObject.queryFeatures(query, lang.hitch(this, function (featureSet) {
+
+                        if (featureSet.features.length == 1) {
+                            this.map.centerAndZoom(featureSet.features[0].geometry,this.config.eventDetails.zoomScale);
+                        }
+
+                        console.log('Load Complete');
+
+                        dojo.style("loader", "display", "none");
+                        console.log('Loader Hidden');
+
+                    }));
+                    return false;
+
+                }
+                else {
+                    return true;
+                }
+
+            }
+            else {
+                return true;
+            }
+
+
+        },
+
         _clearResultLayers: function () {
             array.forEach(this.resultLayers, function (resultLayer) {
                 resultLayer.clear();
@@ -169,9 +208,9 @@ function (
 
         },
         _clearResultPanel: function () {
-            
+
             array.forEach(this.cps, function (cp) {
-                cp.set("content","");
+                cp.set("content", "");
             });
 
         },
@@ -256,8 +295,8 @@ function (
 
             });
 
-        
-          
+
+
             cp.startup();
             cp.on('show', lang.hitch(this, function (ent) {
 
@@ -271,22 +310,22 @@ function (
 
 
 
-            array.forEach(this.config.appParams, function (appParam) {
+            array.forEach(this.config.GPParams, function (GPParam) {
 
 
                 cp = new ContentPane({
-                    title: appParam.GPParam.replace("_", " "),
-                    name: appParam.GPParam,
-                    id: appParam.GPParam + "CP"
+                    title: GPParam.paramName.replace("_", " "),
+                    name: GPParam.paramName,
+                    id: GPParam.paramName + "CP"
 
                 });
 
-                
-                
-                cp.on('show', lang.hitch(this, this._contentPaneShown( appParam.GPParam)));
 
 
-                var idStart = appParam.GPParam; //message.result.ParamName; //appParam.GPParam;
+                cp.on('show', lang.hitch(this, this._contentPaneShown(GPParam.paramName)));
+
+
+                var idStart = GPParam.paramName; //message.result.ParamName; //GPParam.paramName;
 
                 cp.startup();
 
@@ -314,20 +353,20 @@ function (
 
             this.grds = [];
             this.cps = [];
-            array.forEach(this.config.appParams, function (appParam) {
+            array.forEach(this.config.GPParams, function (GPParam) {
 
 
                 // content: this.config.tabContent,
                 var cp = new ContentPaneX({
-                    title: appParam.GPParam.replace("_", " "),
-                    name: appParam.GPParam,
-                    id: appParam.GPParam + "CP"
+                    title: GPParam.paramName.replace("_", " "),
+                    name: GPParam.paramName,
+                    id: GPParam.paramName + "CP"
 
                 });
 
 
 
-                var idStart = appParam.GPParam; //message.result.ParamName; //appParam.GPParam;
+                var idStart = GPParam.paramName; //message.result.ParamName; //GPParam.paramName;
                 //var cp = dijit.byId(idStart + "CP");
 
 
@@ -363,16 +402,16 @@ function (
 
         },
         _createInfoWindows: function () {
-          
+
             this.template = new InfoTemplate();
             this.template.setTitle("test");
             this.template.setContent("test");
         },
-        _populateDataGrid: function (items, selectedappParam) {
+        _populateDataGrid: function (items, selectedGPParam) {
             var gd = dijit.byId(message.result.paramName + "GD");
             if (gd.structure == null) {
                 var layout = [[]];
-                var flds = selectedappParam.displayFields.split(",");
+                var flds = selectedGPParam.displayFields.split(",");
 
                 layout[0] = dojo.map(message.result.value.fields, lang.hitch(this, function (result) {
                     //"esriFieldTypeOID" //esriFieldTypeDouble //esriFieldTypeSmallInteger //esriFieldTypeInteger
@@ -413,23 +452,23 @@ function (
             gd.resize();
             this.sc.resize();
         },
-        _populateResultsToggle: function (selectedappParam) {
-            var intActiveResultCount = {"Count":0};
-            var intSkippedResultCount =  {"Count":0};;
+        _populateResultsToggle: function (selectedGPParam) {
+            var intResultCount = { "Count": 0, "SkipCount": 0 };
 
-            var cp = dijit.byId(selectedappParam.GPParam + "CP");
+
+            var cp = dijit.byId(selectedGPParam.paramName + "CP");
             var cpSum = dijit.byId("summaryCP");
 
             cp.set("content", "");
             var resLayer;
             array.some(this.resultLayers, function (layer) {
-                if (layer.id == selectedappParam.GPParam) {
+                if (layer.id == selectedGPParam.paramName) {
                     resLayer = layer;
                     return false;
                 }
             });
 
-            array.forEach(selectedappParam.results, function (resultItem) {
+            array.forEach(selectedGPParam.results, function (resultItem) {
                 var process = true;
                 var selectGraphic = new Graphic(resultItem.geometry, null, resultItem.attributes, this.template);
 
@@ -437,15 +476,14 @@ function (
 
                 this.multiPoint.addPoint(resultItem.geometry);
 
+                var skipLoc = null;
 
                 if (this.skipLayer.graphics.length > 0) {
-                    array.some(this.skipLayer.graphics, function (skipItem) {
-                        if (skipItem.GPParam == selectedappParam.GPParam)
-                        {
-                            if (resultItem.attributes[selectedappParam.bypassDetails.IDField] == skipItem.attributes[selectedappParam.bypassDetails.IDField]) {
+                    array.some(this.skipLayer.graphics, function (item) {
+                        if (item.GPParam == selectedGPParam.paramName) {
+                            if (resultItem.attributes[selectedGPParam.bypassDetails.IDField] == item.attributes[selectedGPParam.bypassDetails.IDField]) {
                                 process = false;
-                                intSkippedResultCount.Count = intSkippedResultCount.Count + 1;
-
+                                skipLoc = item;
                                 return false;
                             }
                         }
@@ -453,72 +491,90 @@ function (
                         //    process = false;
                         //    return false;
                         //}
-                        
+
                     });
                 }
-                if (process) {
-                    intActiveResultCount.Count = intActiveResultCount.Count + 1;
-
-                    resLayer.add(selectGraphic);
-
-
-                    var div = domConstruct.create('div', { "id": selectedappParam.GPParam + ":" + resultItem.attributes.OID + "div", class: "resultItem" }, cp.containerNode);
+                if (skipLoc == null) {
+                    skipLoc = new Graphic(resultItem.geometry, null, resultItem.attributes, null);
+                }
+                resLayer.add(selectGraphic);
 
 
-                    var skipLoc = new Graphic(resultItem.geometry, null, resultItem.attributes,null);
-                    skipLoc.GPParam = selectedappParam.GPParam;
-
-                    var bypassID = selectedappParam.GPParam + ":" + resultItem.attributes.OID + "BypassBtn";
-                    var zoomToID = selectedappParam.GPParam + ":" + resultItem.attributes.OID + "ZoomToBtn";
-
-                    resultItem.controlDetails = {
-                        "bypassButtonID": bypassID,
-                        "zoomToButtonID": zoomToID,
-                        "skipGraphic": skipLoc,
-                        "bypassDetails": selectedappParam.bypassDetails,
-                        "selectionGraphic": selectGraphic
-                    };
-                    var btncontrolDiv = domConstruct.create('div', { "id": selectedappParam.GPParam + ":" + resultItem.attributes.OID + "controls" }, div);
+                var div = domConstruct.create('div', { "id": selectedGPParam.paramName + ":" + resultItem.attributes.OID + "div", class: "resultItem" }, cp.containerNode);
 
 
+                skipLoc.GPParam = selectedGPParam.paramName;
 
-                    var btnZoomDiv = domConstruct.create('div', { "id": selectedappParam.GPParam + ":" + resultItem.attributes.OID + "BtnZoomDiv" }, btncontrolDiv);
+                var bypassID = selectedGPParam.paramName + ":" + resultItem.attributes.OID + "BypassBtn";
+                var zoomToID = selectedGPParam.paramName + ":" + resultItem.attributes.OID + "ZoomToBtn";
 
-                    var btnZoom = new Button({
-                        id: zoomToID,
+                resultItem.controlDetails = {
+                    "bypassButtonID": bypassID,
+                    "zoomToButtonID": zoomToID,
+                    "skipGraphic": skipLoc,
+                    "bypassDetails": selectedGPParam.bypassDetails,
+                    "selectionGraphic": selectGraphic
+                };
+                var btncontrolDiv = domConstruct.create('div', { "id": selectedGPParam.paramName + ":" + resultItem.attributes.OID + "controls" }, div);
+
+
+
+                var btnZoomDiv = domConstruct.create('div', { "id": selectedGPParam.paramName + ":" + resultItem.attributes.OID + "BtnZoomDiv" }, btncontrolDiv);
+
+                var btnZoom = new Button({
+                    id: zoomToID,
+
+                    baseClass: "",
+                    iconClass: "resultItemButtonZoomIcon resultItemButton",
+                    showLabel: false
+
+                }, btnZoomDiv);
+                btnZoom.startup();
+                btnZoom.on("click", lang.hitch(this, this._zoomToBtn(resultItem)));
+
+                if (selectedGPParam.bypassDetails.skipable && process) {
+                    intResultCount.Count = intResultCount.Count + 1;
+                    var btnBypassDiv = domConstruct.create('div', { "id": selectedGPParam.paramName + ":" + resultItem.attributes.OID + "BtnBypassDiv" }, btncontrolDiv);
+
+                    var btnBypass = new Button({
+                        id: bypassID,
 
                         baseClass: "",
-                        iconClass: "resultItemButtonZoomIcon resultItemButton",
+                        iconClass: "resultItemButtonSkipIcon resultItemButton",
                         showLabel: false
 
-                    }, btnZoomDiv);
-                    btnZoom.startup();
-                    btnZoom.on("click", lang.hitch(this, this._zoomToBtn(resultItem)));
-
-                    if (selectedappParam.bypassDetails.skipable) {
-
-                        var btnBypassDiv = domConstruct.create('div', { "id": selectedappParam.GPParam + ":" + resultItem.attributes.OID + "BtnBypassDiv" }, btncontrolDiv);
-
-                        var btnBypass = new Button({
-                            id: bypassID,
-
-                            baseClass: "",
-                            iconClass: "resultItemButtonSkipIcon resultItemButton",
-                            showLabel: false
-
-                        }, btnBypassDiv);
-                        btnBypass.startup();
-                        btnBypass.on("click", lang.hitch(this, this._skipBtn(resultItem)));
-                    }
-
-                    var lbl = domConstruct.create('label', { class: "resultItemLabel", "for": selectedappParam.GPParam + ":" + resultItem.attributes.OID + "controls", 'innerHTML': lang.replace(selectedappParam.displayText, resultItem.attributes) }, btncontrolDiv);
-
-
+                    }, btnBypassDiv);
+                    btnBypass.startup();
+                    btnBypass.on("click", lang.hitch(this, this._skipBtn(resultItem)));
                 }
+                else if (selectedGPParam.bypassDetails.skipable && process == false) {
+                    intResultCount.SkipCount = intResultCount.SkipCount + 1;
+                    var btnBypassDiv = domConstruct.create('div', { "id": selectedGPParam.paramName + ":" + resultItem.attributes.OID + "BtnBypassDiv" }, btncontrolDiv);
+
+                    var btnBypass = new Button({
+                        id: bypassID,
+
+                        baseClass: "",
+                        iconClass: "resultItemButtonSkipIconSelected resultItemButton",
+                        showLabel: false
+
+                    }, btnBypassDiv);
+                    btnBypass.startup();
+
+                    btnBypass.on("click", lang.hitch(this, this._skipBtn(resultItem)));
+                }
+                else {
+                    intResultCount.Count = intResultCount.Count + 1;
+                }
+                var lbl = domConstruct.create('label', { class: "resultItemLabel", "for": selectedGPParam.paramName + ":" + resultItem.attributes.OID + "BtnZoomDiv", 'innerHTML': lang.replace(selectedGPParam.displayText, resultItem.attributes) }, btncontrolDiv);
+                //dojo.connect(lbl, "onClick", lang.hitch(this, this._zoomToBtn(resultItem)));
+
+
+
             }, this);
 
-            dojo.place("<div class='resultItem'>" + lang.replace(selectedappParam.summaryText, intActiveResultCount) + "</div>", cpSum.containerNode);
-           
+            dojo.place("<div class='resultItem'>" + lang.replace(selectedGPParam.summaryText, intResultCount) + "</div>", cpSum.containerNode);
+
         },
         _skipBtn: function (resultItem) {
             return function (e) {
@@ -544,7 +600,7 @@ function (
 
 
             }
-        },  
+        },
         _createToolbar: function () {
             this.toolbar = new Draw(this.map);
             this.toolbar.on("draw-end", lang.hitch(this, this._drawEnd));
@@ -553,7 +609,7 @@ function (
             esri.bundle.toolbars.draw.addPoint = this.config.i18n.map.mouseToolTip;
             this.toolbar.deactivate();
 
-        },    
+        },
         _drawEnd: function (evt) {
             this._addToMap(evt.geometry);
         },
@@ -592,7 +648,7 @@ function (
         },
         _addFlag: function (point) {
 
-            var flag = new Graphic(point,null, null, null);
+            var flag = new Graphic(point, null, null, null);
             this.flagLayer.add(flag);
 
         },
@@ -669,11 +725,11 @@ function (
             this.resultsCnt = 0;
 
 
-            array.forEach(this.config.appParams, function (appParam) {
+            array.forEach(this.config.GPParams, function (GPParam) {
 
                 this.resultsCnt = this.resultsCnt + 1;
 
-                this.gp.getResultData(message.jobInfo.jobId, appParam.GPParam).then(lang.hitch(this, function () {
+                this.gp.getResultData(message.jobInfo.jobId, GPParam.paramName).then(lang.hitch(this, function () {
                     this.resultsCnt = this.resultsCnt - 1
 
                     if (this.resultsCnt == 0) {
@@ -703,21 +759,21 @@ function (
         },
         _addFeatures: function (message) {
             console.log(message.result.paramName);
-            var selectedappParam;
+            var selectedGPParam;
 
-            array.some(this.config.appParams, function (appParam) {
-                if (message.result.paramName == appParam.GPParam) {
+            array.some(this.config.GPParams, function (GPParam) {
+                if (message.result.paramName == GPParam.paramName) {
 
-                    selectedappParam = appParam;
+                    selectedGPParam = GPParam;
                     return false;
                 }
             });
 
             var resultFeatures = message.result.value.features;
-            selectedappParam.results = resultFeatures;
-            this._populateResultsToggle(selectedappParam);
+            selectedGPParam.results = resultFeatures;
+            this._populateResultsToggle(selectedGPParam);
 
-        },   
+        },
         _formatDate: function (value) {
             var inputDate = new Date(value);
             return dojo.date.locale.format(inputDate, {
@@ -725,13 +781,13 @@ function (
                 datePattern: 'MM d, y'
             });
 
-        },      
+        },
         _contentPaneShown: function (paneID) {
             return function () {
 
                 array.forEach(this.resultLayers, function (layer) {
                     if (layer.id == paneID) {
-                        layer.setVisibility( true);
+                        layer.setVisibility(true);
                     }
                     else {
                         layer.setVisibility(false);
@@ -739,8 +795,8 @@ function (
 
 
                 });
-               
-            
+
+
             }
         },
         _initMap: function () {
@@ -758,32 +814,41 @@ function (
 
 
 
-           
+
             this.resultLayers = []// = new GraphicsLayer();
-            array.forEach(this.config.appParams, lang.hitch(this, function (appParam) {
-                var resLayer  =new GraphicsLayer();
-                var resSymbol = new SimpleMarkerSymbol(appParam.highlightSymbol);
+            array.forEach(this.config.GPParams, lang.hitch(this, function (GPParam) {
+                var resLayer = new GraphicsLayer();
+                var resSymbol = new SimpleMarkerSymbol(GPParam.highlightSymbol);
                 var resRen = new SimpleRenderer(resSymbol);
 
-            
-                resLayer.id = appParam.GPParam;
+
+                resLayer.id = GPParam.paramName;
 
                 resLayer.setRenderer(resRen);
                 this.map.addLayer(resLayer);
                 this.resultLayers.push(resLayer);
                 array.some(this.layers, lang.hitch(this, function (layer) {
 
-                    if (layer.title == appParam.saveToLayerName) {
-                        appParam.saveToLayer = layer;
-                        console.log(appParam.saveToLayerName + " " + "Set");
+                    if (layer.title == GPParam.saveToLayerName) {
+                        GPParam.saveToLayer = layer;
+                        console.log(GPParam.saveToLayerName + " " + "Set");
                         return false;
                     }
 
                 }));
             }));
 
-           
+            if (this.config.eventDetails.layerName != "") {
+                array.some(this.layers, lang.hitch(this, function (layer) {
 
+                    if (layer.title == this.config.eventDetails.layerName) {
+                        this.eventLayer = layer;
+                        console.log("Event Layer found: " + this.config.eventDetails.layerName);
+                        return false;
+                    }
+
+                }));
+            }
             this.flagLayer = new GraphicsLayer();
             this.flagLayer.id = "Flags";
 
@@ -791,7 +856,7 @@ function (
             flagSymbol.xoffset = 2;
             flagSymbol.yoffset = 15;
 
-            var flagRen =new SimpleRenderer(flagSymbol);
+            var flagRen = new SimpleRenderer(flagSymbol);
             this.flagLayer.setRenderer(flagRen);
 
 
@@ -816,22 +881,22 @@ function (
 
 
 
-            this.map.addLayers([ this.skipLayer, this.flagLayer, this.barrierLayer]);
+            this.map.addLayers([this.skipLayer, this.flagLayer, this.barrierLayer]);
 
 
 
 
 
 
-//dojo.connect(this.resultLayer,"onLoad", function (layer) {
-//                layer.enableMouseEvents();
+            //dojo.connect(this.resultLayer,"onLoad", function (layer) {
+            //                layer.enableMouseEvents();
 
-//                layer.on("click", function (e) {
-//                    alert(e);
+            //                layer.on("click", function (e) {
+            //                    alert(e);
 
-//                });
+            //                });
 
-//            });
+            //            });
 
             //this.resultLayer.setRenderer(this.selectionRen);
             //this.flagLayer.setRenderer(this.flagRen);
@@ -847,14 +912,14 @@ function (
             //}
             // this.map.graphics.enableMouseEvents();
 
-           
+
             //dojo.connect(this.resultLayer, "onClick", function (e) {
             //    alert(e);
 
             //});
-            
-            
-            
+
+
+
 
 
 

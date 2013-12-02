@@ -233,9 +233,9 @@ function(
             //application default and configuration info has been applied. Currently these values 
             //(center, basemap, theme) are only here as examples and can be removed if you don't plan on 
             //supporting additional url parameters in your application. 
-            var paramItems = ['center', 'basemap', 'theme'];
+            var paramItems = ['EventID'];
             var mixinParams = this._createUrlParamsObject(paramItems);
-            lang.mixin(this.config, mixinParams);
+            lang.mixin(this.config.eventDetails, mixinParams);
         }
     });
 });
