@@ -22,6 +22,12 @@ define([], function () {
 
         "gpUrl": "http://localhost:6080/arcgis/rest/services/IsolationTrace/GPServer/IsolationTrace",
         "tabContent": "----",
+        "highlighterDetails": {
+            "image":  "/IsolationTrace/images/ani/blueglow.gif",
+            "height": 60,
+            "width": 60,
+            "timeout": 5000
+        },
         "eventDetails": {
             "layerName": "Leak Location",
             "whereClause": "OBJECTID = {EventID}",
@@ -102,8 +108,8 @@ define([], function () {
                         "color": [0, 0, 0, 0],
                         "size": 22,
                         "angle": 0,
-                        "xoffset": 0,
-                        "yoffset": -2,
+                        "xoffset": 1,
+                        "yoffset": -1,
                         "outline":
                          {
                              "color": [122, 122, 255, 255],

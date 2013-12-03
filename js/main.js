@@ -10,6 +10,7 @@ define([
     "esri/graphic",
     "esri/toolbars/draw",
     "esri/symbols/SimpleMarkerSymbol",
+    "esri/symbols/PictureMarkerSymbol",
     "esri/symbols/SimpleLineSymbol",
     "esri/layers/GraphicsLayer",
     "esri/renderers/SimpleRenderer",
@@ -33,7 +34,8 @@ define([
 
      "dijit/form/ToggleButton",
      "esri/InfoTemplate",
-     "esri/tasks/query"
+     "esri/tasks/query",
+     "dojox/timing"
 
 ],
 function (
@@ -48,6 +50,7 @@ function (
     Graphic,
     Draw,
     SimpleMarkerSymbol,
+    PictureMarkerSymbol,
     SimpleLineSymbol,
     GraphicsLayer,
     SimpleRenderer,
@@ -70,7 +73,8 @@ function (
 
     ToggleButton,
     InfoTemplate,
-    Query
+    Query,
+    Timing
 
 ) {
     return declare("", null, {
@@ -113,7 +117,43 @@ function (
                 console.log('Loader Hidden');
 
             }
+            this._createTimer();
 
+
+        },
+        _createTimer: function () {
+            this.timer = new Timing.Timer(this.config.highlighterDetails.timeout);
+
+            this.aniLayer = new GraphicsLayer();
+            //  var aniSymbol = new PictureMarkerSymbol("./images/ani/Cyanglow.gif",25,25);
+            var aniSymbol = new PictureMarkerSymbol(this.config.highlighterDetails.image, this.config.highlighterDetails.width, this.config.highlighterDetails.height);
+
+            var aniRen = new SimpleRenderer(aniSymbol);
+
+
+            this.aniLayer.id = "aniLayer";
+
+            this.aniLayer.setRenderer(aniRen);
+
+            this.map.addLayer(this.aniLayer);
+
+
+            this.timer.onTick = lang.hitch(this, function () {
+                this.timer.stop();
+                console.info("hightlighter complete");
+                this.aniLayer.clear();
+            });
+           
+
+        },
+        _showHighlight: function (point) {
+            this.aniLayer.clear();
+            this.timer.stop();
+           var highightGraphic = new Graphic(point, null, null,null);
+           this.aniLayer.add(highightGraphic);
+           
+
+            this.timer.start();
         },
         _initPage: function () {
             var control;
@@ -150,21 +190,71 @@ function (
                 this._executeTrace();
 
             }));
-            dojo.connect(dojo.byId("tools.clear"), 'onclick', lang.hitch(this, function () {
+            dojo.connect(dojo.byId("tools.save"), 'onclick', lang.hitch(this, function () {
                 this._toggleControls("false");
-
-                this.geoLocate.clear();
-
-                this.map.graphics.clear();
-
-                this.flagLayer.clear();
-                this.barrierLayer.clear();
-                this.skipLayer.clear();
-                this._clearResultLayers();
-                this._clearResultPanel();
+                this._saveTrace();
 
             }));
+            dojo.connect(dojo.byId("tools.clear"), 'onclick', lang.hitch(this, function () {
+             
+                this._reset();
+            }));
 
+        },
+        _reset: function () {
+            this._toggleControls("false");
+
+            this.geoLocate.clear();
+
+            this.map.graphics.clear();
+
+            this.flagLayer.clear();
+            this.barrierLayer.clear();
+            this.skipLayer.clear();
+            this._clearResultLayers();
+            this._clearResultPanel();
+            this.timer.stop();
+            this.aniLayer.clear();
+        },
+
+        _saveTrace: function () {
+            dijit.byId("tools.save").set("iconClass", "customBigIcon saveIconProcessing");
+
+            var defCount = 0;
+            array.forEach(this.config.GPParams,function (GPParam) {
+
+                if (GPParam.results != null && GPParam.saveToLayer)
+                {
+                    defCount = defCount + 1;
+
+                    var editDeferred = GPParam.saveToLayer.layerObject.applyEdits(GPParam.results, null, null);
+                  
+                    editDeferred.addCallback(lang.hitch(this, function (result) {
+                        defCount = defCount - 1;
+                        if (defCount == 0)
+                        {
+                            this._reset();
+                            dijit.byId("tools.save").set("iconClass", "customBigIcon saveIcon");
+
+                        }
+                        console.log(result);
+                    }));
+                    editDeferred.addErrback(function (error) {
+                        defCount = defCount - 1;
+                        if (defCount == 0) {
+                            this._reset();
+                            dijit.byId("tools.save").set("iconClass", "customBigIcon saveIcon");
+
+                        }
+                        console.log(error);
+                    });
+                }
+            },this);
+
+            if (defCount == 0) {
+                dijit.byId("tools.save").set("iconClass", "customBigIcon saveIcon");
+
+            }
         },
         _zoomToEvent: function () {
             if (this.eventLayer != null) {
@@ -544,8 +634,11 @@ function (
                         showLabel: false
 
                     }, btnBypassDiv);
+
                     btnBypass.startup();
                     btnBypass.on("click", lang.hitch(this, this._skipBtn(resultItem)));
+                    resultItem.bypassed = false;
+
                 }
                 else if (selectedGPParam.bypassDetails.skipable && process == false) {
                     intResultCount.SkipCount = intResultCount.SkipCount + 1;
@@ -559,11 +652,16 @@ function (
                         showLabel: false
 
                     }, btnBypassDiv);
+
                     btnBypass.startup();
 
                     btnBypass.on("click", lang.hitch(this, this._skipBtn(resultItem)));
+                    resultItem.bypassed = true;
+
                 }
                 else {
+                    resultItem.bypassed = false;
+
                     intResultCount.Count = intResultCount.Count + 1;
                 }
                 var lbl = domConstruct.create('label', { class: "resultItemLabel", "for": selectedGPParam.paramName + ":" + resultItem.attributes.OID + "BtnZoomDiv", 'innerHTML': lang.replace(selectedGPParam.displayText, resultItem.attributes) }, btncontrolDiv);
@@ -583,10 +681,13 @@ function (
                 if (btn.get("iconClass") == "resultItemButtonSkipIconSelected resultItemButton") {
                     btn.set("iconClass", "resultItemButtonSkipIcon resultItemButton");
                     this.skipLayer.remove(resultItem.controlDetails.skipGraphic);
+                    resultItem.bypassed = false;
+
                 }
                 else {
                     btn.set("iconClass", "resultItemButtonSkipIconSelected resultItemButton");
                     this.skipLayer.add(resultItem.controlDetails.skipGraphic);
+                    resultItem.bypassed = true;
 
                 }
 
@@ -595,9 +696,10 @@ function (
         },
         _zoomToBtn: function (resultItem) {
             return function (e) {
-
+                
                 this.map.centerAt(resultItem.controlDetails.skipGraphic.geometry);
 
+                this._showHighlight(resultItem.controlDetails.skipGraphic.geometry);
 
             }
         },

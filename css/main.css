@@ -425,3 +425,13 @@ background-image: linear-gradient(#ffffff 0px, rgba(255, 255, 255, 0) 3px, rgba(
     background-image: url("../images/loader.gif");
     background-color: rgba(102,102,102,0.80);
 }
+
+.saveIcon {
+    background-image: url("../images/save.png");
+    background-color: rgba(102,102,102,0.80);
+}
+
+.saveIconProcessing {
+    background-image: url("../images/loader.gif");
+    background-color: rgba(102,102,102,0.80);
+}
