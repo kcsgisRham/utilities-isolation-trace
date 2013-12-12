@@ -30,6 +30,7 @@ define({
         gp:
             {
                 failed: "The trace could not be completed, please try again.",
+                downloadFileName: "results"
             }
 
     }),

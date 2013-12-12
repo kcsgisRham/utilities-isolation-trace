@@ -35,7 +35,8 @@ define([
      "dijit/form/ToggleButton",
      "esri/InfoTemplate",
      "esri/tasks/query",
-     "dojox/timing"
+     "dojox/timing",
+     "dojo/has", "dojo/_base/sniff"
 
 ],
 function (
@@ -74,7 +75,7 @@ function (
     ToggleButton,
     InfoTemplate,
     Query,
-    Timing
+    Timing, Has
 
 ) {
     return declare("", null, {
@@ -106,9 +107,18 @@ function (
             this._createLocatorButton();
             console.log('Locator Created');
             this._createGeocoder();
-            console.log('Geocder Created');
+            console.log('Geocoder Created');
+
+
+            this._createTimer();
+
+            console.log('timer Created');
+            this._initCSVDownload();
+
+            console.log('csv download init');
 
             console.log('Checking for Event Feature');
+
             if (this._zoomToEvent()) {
 
                 console.log('Load Complete');
@@ -117,7 +127,6 @@ function (
                 console.log('Loader Hidden');
 
             }
-            this._createTimer();
 
 
         },
@@ -143,15 +152,15 @@ function (
                 console.info("hightlighter complete");
                 this.aniLayer.clear();
             });
-           
+
 
         },
         _showHighlight: function (point) {
             this.aniLayer.clear();
             this.timer.stop();
-           var highightGraphic = new Graphic(point, null, null,null);
-           this.aniLayer.add(highightGraphic);
-           
+            var highightGraphic = new Graphic(point, null, null, null);
+            this.aniLayer.add(highightGraphic);
+
 
             this.timer.start();
         },
@@ -196,7 +205,7 @@ function (
 
             }));
             dojo.connect(dojo.byId("tools.clear"), 'onclick', lang.hitch(this, function () {
-             
+
                 this._reset();
             }));
 
@@ -215,43 +224,108 @@ function (
             this._clearResultPanel();
             this.timer.stop();
             this.aniLayer.clear();
-        },
+            this.csvData = "";
 
+        },
+        _saveComplete: function () {
+            this.defCount = this.defCount - 1;
+            if (this.defCount == 0) {
+
+                if (this.csvData != "") {
+
+
+
+                    if (Has("ie") >= 10) {
+                        var blob = new Blob([this.csvData], {
+                            type: "text/csv;charset=utf-8;",
+                        });
+                        window.navigator.msSaveBlob(blob, this.config.i18n.gp.downloadFileName + ".csv");
+
+                    }
+                    else if (Has("chrome") > 14) {
+                        var csvContent = "data:text/csv;charset=utf-8," + this.csvData;
+
+                        var encodedUri = encodeURI(csvContent);
+                        var link = document.createElement("a");
+                        link.setAttribute("href", encodedUri);
+                        link.setAttribute("download", this.config.i18n.gp.downloadFileName + ".csv");
+
+                        link.click(); // This will download the data file named "my_data.csv"
+
+                    }
+                    else {
+                        dojo.byId("reportinput").value = this.csvData;
+                        var f = dojo.byId("downloadform");
+                        f.submit();
+                    }
+
+                    // window.open("data:text/csv;charset=utf-8," + escape(csvContent))
+                    //var uriContent = "data:application/octet-stream," + encodeURIComponent(csvContent);
+                    //var myWindow = window.open(uriContent, "Nutrient CSV");
+                    //myWindow.focus();
+
+                    //var encodedUri = encodeURI(csvContent);
+                    //var link = document.createElement("a");
+                    //link.setAttribute("href", encodedUri);
+                    //link.setAttribute("download", gpParam.saveOptions.name + ".csv");
+
+                    //link.click(); // This will download the data file named "my_data.csv"
+
+
+
+                }
+                this._reset();
+                dijit.byId("tools.save").set("iconClass", "customBigIcon saveIcon");
+            }
+
+        },
         _saveTrace: function () {
             dijit.byId("tools.save").set("iconClass", "customBigIcon saveIconProcessing");
 
-            var defCount = 0;
-            array.forEach(this.config.GPParams,function (GPParam) {
+            this.defCount = this.config.GPParams.length;
+            array.forEach(this.config.GPParams, function (GPParam) {
 
-                if (GPParam.results != null && GPParam.saveToLayer)
-                {
-                    defCount = defCount + 1;
+                if (GPParam.results != null && GPParam.saveOptions.type) {
+                    if (GPParam.results.features != null) {
 
-                    var editDeferred = GPParam.saveToLayer.layerObject.applyEdits(GPParam.results, null, null);
-                  
-                    editDeferred.addCallback(lang.hitch(this, function (result) {
-                        defCount = defCount - 1;
-                        if (defCount == 0)
-                        {
-                            this._reset();
-                            dijit.byId("tools.save").set("iconClass", "customBigIcon saveIcon");
+                        if (GPParam.saveOptions.type.toUpperCase() == "Layer".toUpperCase()) {
+                            var editDeferred = GPParam.saveOptions.saveToLayer.layerObject.applyEdits(GPParam.results.features, null, null);
+
+                            editDeferred.addCallback(lang.hitch(this, this._saveComplete()));
+                            editDeferred.addErrback(function (error) {
+                                this.defCount = this.defCount - 1;
+                                if (this.defCount == 0) {
+                                    this._reset();
+                                    dijit.byId("tools.save").set("iconClass", "customBigIcon saveIcon");
+                                    alert(error.message);
+
+                                }
+                                console.log(error);
+                            });
+                        }
+
+                        else if (GPParam.saveOptions.type.toUpperCase() == "csv".toUpperCase()) {
+
+                            this._addCSVContent(GPParam);
+
+                            this._saveComplete();
 
                         }
-                        console.log(result);
-                    }));
-                    editDeferred.addErrback(function (error) {
-                        defCount = defCount - 1;
-                        if (defCount == 0) {
-                            this._reset();
-                            dijit.byId("tools.save").set("iconClass", "customBigIcon saveIcon");
+                    }
+                    else {
+                        this.defCount = this.defCount - 1;
 
-                        }
-                        console.log(error);
-                    });
+                    }
                 }
-            },this);
+                else {
+                    this.defCount = this.defCount - 1;
 
-            if (defCount == 0) {
+                }
+
+
+            }, this);
+
+            if (this.defCount == 0) {
                 dijit.byId("tools.save").set("iconClass", "customBigIcon saveIcon");
 
             }
@@ -267,7 +341,7 @@ function (
                     this.eventLayer.layerObject.queryFeatures(query, lang.hitch(this, function (featureSet) {
 
                         if (featureSet.features.length == 1) {
-                            this.map.centerAndZoom(featureSet.features[0].geometry,this.config.eventDetails.zoomScale);
+                            this.map.centerAndZoom(featureSet.features[0].geometry, this.config.eventDetails.zoomScale);
                         }
 
                         console.log('Load Complete');
@@ -558,7 +632,7 @@ function (
                 }
             });
 
-            array.forEach(selectedGPParam.results, function (resultItem) {
+            array.forEach(selectedGPParam.results.features, function (resultItem) {
                 var process = true;
                 var selectGraphic = new Graphic(resultItem.geometry, null, resultItem.attributes, this.template);
 
@@ -696,7 +770,7 @@ function (
         },
         _zoomToBtn: function (resultItem) {
             return function (e) {
-                
+
                 this.map.centerAt(resultItem.controlDetails.skipGraphic.geometry);
 
                 this._showHighlight(resultItem.controlDetails.skipGraphic.geometry);
@@ -871,7 +945,7 @@ function (
                 }
             });
 
-            var resultFeatures = message.result.value.features;
+            var resultFeatures = message.result.value;
             selectedGPParam.results = resultFeatures;
             this._populateResultsToggle(selectedGPParam);
 
@@ -929,15 +1003,19 @@ function (
                 resLayer.setRenderer(resRen);
                 this.map.addLayer(resLayer);
                 this.resultLayers.push(resLayer);
-                array.some(this.layers, lang.hitch(this, function (layer) {
+                if (GPParam.saveOptions != null) {
+                    if (GPParam.saveOptions.type.toUpperCase() == "Layer".toUpperCase()) {
+                        array.some(this.layers, lang.hitch(this, function (layer) {
 
-                    if (layer.title == GPParam.saveToLayerName) {
-                        GPParam.saveToLayer = layer;
-                        console.log(GPParam.saveToLayerName + " " + "Set");
-                        return false;
+                            if (layer.title == GPParam.saveOptions.name) {
+                                GPParam.saveOptions.saveToLayer = layer;
+                                console.log(GPParam.saveOptions.name + " " + "Set");
+                                return false;
+                            }
+
+                        }));
                     }
-
-                }));
+                }
             }));
 
             if (this.config.eventDetails.layerName != "") {
@@ -1028,6 +1106,63 @@ function (
 
         },
         //create a map based on the input web map id
+        _addCSVContent: function (gpParam) {
+            var featureArray = gpParam.results
+            var csvContent = gpParam.saveOptions.name + this.config.csvNewLineChar + this.config.csvNewLineChar;
+
+
+            var atts = [];
+            var dateFlds = []
+            array.forEach(featureArray.fields, function (field, index) {
+
+                if (field.type == "esriFieldTypeDate") {
+                    dateFlds.push(index);
+
+                }
+                atts.push(field["alias"]);
+            }
+           , this);
+
+
+            csvContent += atts.join(",") + this.config.csvNewLineChar;
+            array.forEach(featureArray.features, function (feature, index) {
+                atts = [];
+                var idx = 0;
+
+                for (var k in feature.attributes) {
+
+                    if (feature.attributes.hasOwnProperty(k)) {
+                        if (dateFlds.indexOf(idx) >= 0) {
+                            atts.push('"' + this._formatDate(feature.attributes[k]) + '"');
+                        }
+                        else {
+                            atts.push('"' + feature.attributes[k] + '"');
+                        }
+                    }
+                    idx = idx + 1;
+                }
+
+
+                dataLine = atts.join(",");
+
+                csvContent += dataLine + this.config.csvNewLineChar;
+            }, this);
+
+            this.csvData = this.csvData == "" ? csvContent : this.csvData + this.config.csvNewLineChar + this.config.csvNewLineChar + this.config.csvNewLineChar + csvContent;
+
+
+        },
+        _initCSVDownload: function () {
+            var url = "webservices/csv.ashx";
+            var f = dojo.byId("downloadform");
+            f.action = url;
+            dojo.byId("filename").value = this.config.i18n.gp.downloadFileName;
+            this.config.csvNewLineChar = "\r\n";
+
+            this.csvData = "";
+
+        },
+
         _createWebMap: function () {
             dojo.style("loader", "display", "block");
 

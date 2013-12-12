@@ -33,10 +33,10 @@ define([], function () {
             "whereClause": "OBJECTID = {EventID}",
             "zoomScale": "18"
         },
-        "GPParams":[
+       
+    "GPParams":[
             {
                 "paramName": "Isolating_Valves",
-                "saveToLayerName": "System Valve Trace Results",
                 "summaryText": "{Count} Valves Returned in Trace, {SkipCount} were bypassed.",
                 "displayText": "{DIAMETER} inch Valve: {FACILITYID}",
                 "highlightSymbol":
@@ -61,11 +61,15 @@ define([], function () {
                     {
                         "skipable": true,
                         "IDField": "FACILITYID"
-                    }
+                    },
+                 "saveOptions":{
+                        "type": "csv",
+                        "name": "System Valve Trace Results",
+                    } 
             },
             {
                 "paramName": "Isolated_Hydrants",
-                "saveToLayerName": "Hydrant Trace Results",
+              
                 "summaryText": "{Count} Hydrants are affected by this outaged.",
                 "displayText": "{MANUFACTURER} Hydrant {FACILITYID}",
                 "highlightSymbol":
@@ -91,13 +95,16 @@ define([], function () {
                      {
                          "skipable": false,
                          "IDField": ""
-                     }
-
+                     },
+                "saveOptions": {
+                    "type": "Layer",
+                    "name": "Hydrant Trace Results",
+                }
 
             },
              {
                  "paramName": "Isolated_Customers",
-                 "saveToLayerName": "Customer Trace Results",
+                 
                  "summaryText": "{Count} Customers are affected by this outaged.",
                  "displayText": "Customer {FACILITYID}",
                  "highlightSymbol":
@@ -122,7 +129,11 @@ define([], function () {
                       {
                           "skipable": false,
                           "IDField": ""
-                      }
+                      },
+                 "saveOptions": {
+                        "type": "csv",
+                        "name": "Customer Trace Results",
+                    } 
 
              }
         ],

@@ -1,5 +1,3 @@
-@import "//js.arcgis.com/3.7/js/dojox/grid/resources/Grid.css";
-@import "//js.arcgis.com/3.7/js/dojox/grid/resources/claroGrid.css";
 
 .dojoxGrid table {
     margin: 0;
@@ -245,7 +243,7 @@ html, body {
 
 #loader {
     position: absolute;
-    background: url("./images/preloader.gif") no-repeat;
+    /*background: url("./images/preloader.gif") no-repeat;*/
     z-index: 250;
     width: 65px;
     height: 50px;
