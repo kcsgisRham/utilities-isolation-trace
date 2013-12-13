@@ -24,7 +24,10 @@ define({
         page:
             {
             title: "Trace App",
-            
+            summary: "Summary",
+            bypass:"Bypass?"
+
+
         }
         ,
         gp:

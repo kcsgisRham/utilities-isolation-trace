@@ -21,9 +21,9 @@ define([], function () {
         "geometryUrl": "http://tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer",
 
         "gpUrl": "http://localhost:6080/arcgis/rest/services/IsolationTrace/GPServer/IsolationTrace",
-        "tabContent": "----",
+       
         "highlighterDetails": {
-            "image":  "/IsolationTrace/images/ani/blueglow.gif",
+            "image": "/IsolationTrace/images/ani/blueglow.gif",
             "height": 60,
             "width": 60,
             "timeout": 5000
@@ -33,111 +33,128 @@ define([], function () {
             "whereClause": "OBJECTID = {EventID}",
             "zoomScale": "18"
         },
-       
-    "GPParams":[
+        "overviewDetails":
             {
-                "paramName": "Isolating_Valves",
-                "summaryText": "{Count} Valves Returned in Trace, {SkipCount} were bypassed.",
-                "displayText": "{DIAMETER} inch Valve: {FACILITYID}",
-                "highlightSymbol":
-                    {
-
-                        "type": "esriSMS",
-                        "style": "esriSMSCircle",
-                        "color": [0, 0, 0, 0],
-                        "size": 22,
-                        "angle": 0,
-                        "xoffset": 0,
-                        "yoffset": -1,
-                        "outline":
-                         {
-                             "color": [255, 0, 0, 255],
-                             "width": 4
-                         }
+                "paramName": "Affected_Area",
+                "symbol":
+                {
+                    "type": "esriSFS",
+                    "style": "esriSFSNull",
+                    "color": [0, 0, 0, 0],
+                    "outline": {
+                        "type": "esriSLS",
+                        "style": "esriSLSSolid",
+                        "color": [255, 0, 0, 255],
+                        "width": 3
+                    }
 
 
-                    },
-                "bypassDetails":
-                    {
-                        "skipable": true,
-                        "IDField": "FACILITYID"
-                    },
-                 "saveOptions":{
-                        "type": "csv",
-                        "name": "System Valve Trace Results",
-                    } 
+                },
             },
-            {
-                "paramName": "Isolated_Hydrants",
-              
-                "summaryText": "{Count} Hydrants are affected by this outaged.",
-                "displayText": "{MANUFACTURER} Hydrant {FACILITYID}",
-                "highlightSymbol":
-                    {
+        "GPParams": [
+                {
+                    "paramName": "Isolating_Valves",
+                    "summaryText": "{Count} Valves Returned in Trace, {SkipCount} were bypassed.",
+                    "displayText": "{DIAMETER} inch Valve: {FACILITYID}",
+                    "highlightSymbol":
+                        {
 
-                        "type": "esriSMS",
-                        "style": "esriSMSCircle",
-                        "color": [0, 0, 0, 0],
-                        "size": 22,
-                        "angle": 0,
-                        "xoffset": 0,
-                        "yoffset": -2,
-                        "outline":
+                            "type": "esriSMS",
+                            "style": "esriSMSCircle",
+                            "color": [0, 0, 0, 0],
+                            "size": 22,
+                            "angle": 0,
+                            "xoffset": 0,
+                            "yoffset": -1,
+                            "outline":
+                             {
+                                 "color": [255, 0, 0, 255],
+                                 "width": 4
+                             }
+
+
+                        },
+                    "bypassDetails":
+                        {
+                            "skipable": true,
+                            "IDField": "FACILITYID"
+                        },
+                    "saveOptions": {
+                        "type": "layer",
+                        "name": "Isolating System Valves",
+                    }
+                },
+                {
+                    "paramName": "Isolated_Hydrants",
+
+                    "summaryText": "{Count} Hydrants are affected by this outaged.",
+                    "displayText": "{MANUFACTURER} Hydrant {FACILITYID}",
+                    "highlightSymbol":
+                        {
+
+                            "type": "esriSMS",
+                            "style": "esriSMSCircle",
+                            "color": [0, 0, 0, 0],
+                            "size": 22,
+                            "angle": 0,
+                            "xoffset": 0,
+                            "yoffset": -2,
+                            "outline":
+                             {
+                                 "color": [255, 255, 0, 255],
+                                 "width": 4
+                             }
+
+
+
+                        },
+                    "bypassDetails":
                          {
-                             "color": [255, 255, 0, 255],
-                             "width": 4
-                         }
+                             "skipable": false,
+                             "IDField": ""
+                         },
+                    "saveOptions": {
+                        "type": "Layer",
+                        "name": "Isolated Hydrants",
+                    }
+
+                },
+                 {
+                     "paramName": "Isolated_Customers",
+
+                     "summaryText": "{Count} Customers are affected by this outaged.",
+                     "displayText": "Customer {FACILITYID}",
+                     "highlightSymbol":
+                        {
+
+                            "type": "esriSMS",
+                            "style": "esriSMSCircle",
+                            "color": [0, 0, 0, 0],
+                            "size": 22,
+                            "angle": 0,
+                            "xoffset": 1,
+                            "yoffset": -1,
+                            "outline":
+                             {
+                                 "color": [122, 122, 255, 255],
+                                 "width": 4
+                             }
 
 
+                        },
+                     "bypassDetails":
+                          {
+                              "skipable": false,
+                              "IDField": ""
+                          },
+                     "saveOptions": {
+                         "type": "csv",
+                         "name": "Isolated Customers",
+                     }
 
-                    },
-                "bypassDetails":
-                     {
-                         "skipable": false,
-                         "IDField": ""
-                     },
-                "saveOptions": {
-                    "type": "Layer",
-                    "name": "Hydrant Trace Results",
-                }
-
-            },
-             {
-                 "paramName": "Isolated_Customers",
-                 
-                 "summaryText": "{Count} Customers are affected by this outaged.",
-                 "displayText": "Customer {FACILITYID}",
-                 "highlightSymbol":
-                    {
-
-                        "type": "esriSMS",
-                        "style": "esriSMSCircle",
-                        "color": [0, 0, 0, 0],
-                        "size": 22,
-                        "angle": 0,
-                        "xoffset": 1,
-                        "yoffset": -1,
-                        "outline":
-                         {
-                             "color": [122, 122, 255, 255],
-                             "width": 4
-                         }
-
-
-                    },
-                 "bypassDetails":
-                      {
-                          "skipable": false,
-                          "IDField": ""
-                      },
-                 "saveOptions": {
-                        "type": "csv",
-                        "name": "Customer Trace Results",
-                    } 
-
-             }
+                 }
         ],
-      
+
 
 
     };
