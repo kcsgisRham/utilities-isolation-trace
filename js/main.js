@@ -1,16 +1,18 @@
 /*
-Copyright 2013 Esri
- Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
- http://www.apache.org/licenses/LICENSE-2.0
- Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
-
+ | Copyright 2013 Esri
+ |
+ | Licensed under the Apache License, Version 2.0 (the "License");
+ | you may not use this file except in compliance with the License.
+ | You may obtain a copy of the License at
+ |
+ |    http://www.apache.org/licenses/LICENSE-2.0
+ |
+ | Unless required by applicable law or agreed to in writing, software
+ | distributed under the License is distributed on an "AS IS" BASIS,
+ | WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ | See the License for the specific language governing permissions and
+ | limitations under the License.
+ */
 
 define([
     "dojo/ready",
@@ -41,18 +43,17 @@ define([
      "esri/geometry/Multipoint",
      "esri/geometry/Extent",
      "dijit/layout/ContentPane",
-
      "dijit/form/Button",
      "dojo/dom-construct",
      "dijit/layout/StackContainer",
      "dijit/layout/StackController",
      "dojo/dom-prop",
-
      "dijit/form/ToggleButton",
      "esri/InfoTemplate",
      "esri/tasks/query",
      "dojox/timing",
-     "dojo/has", "dojo/_base/sniff"
+     "dojo/has",
+     "dojo/_base/sniff"
 
 ],
 function (
@@ -89,13 +90,12 @@ function (
     StackContainer,
     StackController,
     domProp,
-
     ToggleButton,
     InfoTemplate,
     Query,
-    Timing, Has
-
-) {
+    Timing,
+    Has)
+{
     return declare("", null, {
         config: {},
         constructor: function (config) {
@@ -683,11 +683,11 @@ function (
                     //"esriFieldTypeString"
                     //esriFieldTypeDate
 
-                    // if (flds.indexOf(result.name)>= 0 ) {
+            
                     if (result.type == "esriFieldTypeDate") {
 
                         return { 'name': result.alias, 'field': result.name, editable: false, formatter: this._formatDate };
-                    }//formatter:lang.hitch(this,this._formatDate )
+                    }
                     else {
                         return { 'name': result.alias, 'field': result.name, editable: false };
                     }
