@@ -1,6 +1,6 @@
 ﻿# service-lookup
 
-Web app template that is used to determine if the location specified intersects a polygon.  The location entered is optionally stored in a layer in the web map.
+Web app template to trace a utility network.  This app calls a geoprocessing model to run the analyst and process the results.  The results can be saved to CSV or a Feature Service.
 
 
 
@@ -22,6 +22,9 @@ Web app template that is used to determine if the location specified intersects 
 
 * Notepad or your favorite HTML editor
 * Web browser with access to the Internet
+* ArcGIS Server 10.2 or greater
+* IIS
+* ArcGIS Online
 
 ## Resources
 
