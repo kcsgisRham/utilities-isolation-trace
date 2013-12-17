@@ -50,6 +50,12 @@ define([], function () {
 
 
                 },
+                "saveOptions": {
+                    "type": "layer",//csv or layer
+                    "name": "Isolated Area"
+                }
+
+
             },
         "GPParams": [
                 {
@@ -80,8 +86,8 @@ define([], function () {
                             "IDField": "FACILITYID"
                         },
                     "saveOptions": {
-                        "type": "layer",
-                        "name": "Isolating System Valves",
+                        "type": "layer",//csv or layer
+                        "name": "Isolating System Valves"
                     }
                 },
                 {
@@ -114,8 +120,8 @@ define([], function () {
                              "IDField": ""
                          },
                     "saveOptions": {
-                        "type": "Layer",
-                        "name": "Isolated Hydrants",
+                        "type": "Layer",//csv or layer
+                        "name": "Isolated Hydrants"
                     }
 
                 },
@@ -148,8 +154,8 @@ define([], function () {
                               "IDField": ""
                           },
                      "saveOptions": {
-                         "type": "csv",
-                         "name": "Isolated Customers",
+                         "type": "layer",//csv or layer
+                         "name": "Isolated Customers"
                      }
 
                  }

@@ -235,7 +235,7 @@ function (
         },
         _saveComplete: function () {
             this.defCount = this.defCount - 1;
-            if (this.defCount == 0) {
+            if (this.defCount <= 0) {
 
                 if (this.csvData != "") {
 
@@ -288,42 +288,26 @@ function (
         _saveTrace: function () {
             dijit.byId("tools.save").set("iconClass", "customBigIcon saveIconProcessing");
 
+
+
+
             this.defCount = this.config.GPParams.length;
+
+
+            if (this.resultOverviewLayer != null) {
+                if (this.resultOverviewLayer.graphics != null) {
+                    if (this.resultOverviewLayer.graphics.length > 0) {
+                        this.defCount = this.defCount + 1;
+                        this._saveLayer(this.config.overviewDetails);
+                    }
+                }
+            }
             array.forEach(this.config.GPParams, function (GPParam) {
 
                 if (GPParam.results != null && GPParam.saveOptions.type) {
                     if (GPParam.results.features != null) {
-
-                        if (GPParam.saveOptions.type.toUpperCase() == "Layer".toUpperCase()) {
-                            if (GPParam.saveOptions.saveToLayer != null) {
-
-                                var editDeferred = GPParam.saveOptions.saveToLayer.layerObject.applyEdits(GPParam.results.features, null, null);
-
-                                editDeferred.addCallback(lang.hitch(this, this._saveComplete()));
-                                editDeferred.addErrback(function (error) {
-                                    this.defCount = this.defCount - 1;
-                                    if (this.defCount == 0) {
-                                        this._reset();
-                                        dijit.byId("tools.save").set("iconClass", "customBigIcon saveIcon");
-                                        alert(error.message);
-
-                                    }
-                                    console.log(error);
-                                });
-                            }
-                            else {
-                                alert(GPParam.paramName + " " + "Save to layer is not present in the webmap");
-                                this.defCount = this.defCount - 1;
-                            }
-                        }
-
-                        else if (GPParam.saveOptions.type.toUpperCase() == "csv".toUpperCase()) {
-
-                            this._addCSVContent(GPParam);
-
-                            this._saveComplete();
-
-                        }
+                        this._saveLayer(GPParam);
+                      
                     }
                     else {
                         this.defCount = this.defCount - 1;
@@ -340,6 +324,38 @@ function (
 
             if (this.defCount == 0) {
                 dijit.byId("tools.save").set("iconClass", "customBigIcon saveIcon");
+
+            }
+        },
+        _saveLayer: function (param) {
+            if (param.saveOptions.type.toUpperCase() == "Layer".toUpperCase()) {
+                if (param.saveOptions.saveToLayer != null) {
+
+                    var editDeferred = param.saveOptions.saveToLayer.layerObject.applyEdits(param.results.features, null, null);
+
+                    editDeferred.addCallback(lang.hitch(this, this._saveComplete));
+                    editDeferred.addErrback(function (error) {
+                        this.defCount = this.defCount - 1;
+                        if (this.defCount == 0) {
+                            this._reset();
+                            dijit.byId("tools.save").set("iconClass", "customBigIcon saveIcon");
+                            alert(error.message);
+
+                        }
+                        console.log(error);
+                    });
+                }
+                else {
+                    alert(param.paramName + " " + "Save to layer is not present in the webmap");
+                    this.defCount = this.defCount - 1;
+                }
+            }
+
+            else if (param.saveOptions.type.toUpperCase() == "csv".toUpperCase()) {
+
+                this._addCSVContent(param);
+
+                this._saveComplete();
 
             }
         },
@@ -379,7 +395,7 @@ function (
         },
         _clearOverview: function () {
             this.resultOverviewLayer.clear();
-            
+
 
         },
         _clearResultLayers: function () {
@@ -587,9 +603,9 @@ function (
             this.template = new InfoTemplate();
             this.template.setTitle(this.config.i18n.page.bypass);
 
-           
 
-            this.template.setContent(lang.hitch(this,this._createSkipButtonForPopup));
+
+            this.template.setContent(lang.hitch(this, this._createSkipButtonForPopup));
 
 
         },
@@ -638,9 +654,9 @@ function (
                 // this._skipBtn(graphic.resultItem)
                 this.map.infoWindow.hide();
             }
-            
-           
-         
+
+
+
         },
         _populateDataGrid: function (items, selectedGPParam) {
             var gd = dijit.byId(message.result.paramName + "GD");
@@ -705,7 +721,7 @@ function (
 
             array.forEach(selectedGPParam.results.features, function (resultItem) {
                 var process = true;
-   
+
                 //this.multiPoint.addPoint(resultItem.geometry);
 
                 var skipLoc = null;
@@ -784,7 +800,7 @@ function (
                     btnBypass.startup();
                     btnBypass.on("click", lang.hitch(this, this._skipBtn(resultItem)));
                     resultItem.controlDetails.selectionGraphic.bypassed = false;
-                   // selectGraphic.attributes.bypassed = false;
+                    // selectGraphic.attributes.bypassed = false;
 
                     selectGraphic.setInfoTemplate(this.template);
 
@@ -1026,6 +1042,7 @@ function (
 
             if (message.result.paramName == this.config.overviewDetails.paramName) {
                 var resultFeatures = message.result.value;
+                this.config.overviewDetails.results = resultFeatures;
                 this._populateOverview(resultFeatures);
             }
             else {
@@ -1053,10 +1070,10 @@ function (
                 this.overExtent = this.overExtent == null ? feature.geometry.getExtent() : this.overExtent.union(feature.geometry.getExtent());
                 var selectGraphic = new Graphic(feature.geometry, null, null, null);
                 this.resultOverviewLayer.add(selectGraphic);
-            },this);
-          
+            }, this);
 
-            
+
+
         },
         _formatDate: function (value) {
             var inputDate = new Date(value);
@@ -1106,6 +1123,20 @@ function (
 
             this.resultOverviewLayer.setRenderer(ovrRen);
             this.map.addLayer(this.resultOverviewLayer);
+
+
+
+            if (this.config.overviewDetails.saveOptions.type.toUpperCase() == "Layer".toUpperCase()) {
+                array.some(this.layers, lang.hitch(this, function (layer) {
+
+                    if (layer.title == this.config.overviewDetails.saveOptions.name) {
+                        this.config.overviewDetails.saveOptions.saveToLayer = layer;
+                        console.log(this.config.overviewDetails.saveOptions.name + " " + "Set");
+                        return false;
+                    }
+
+                }));
+            }
 
 
             this.resultLayers = []// = new GraphicsLayer();
