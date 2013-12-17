@@ -1,4 +1,4 @@
-﻿# service-lookup
+﻿# Web Trace
 
 Web app template to trace a utility network.  This app calls a geoprocessing model to run the analyst and process the results.  The results can be saved to CSV or a Feature Service.
 
