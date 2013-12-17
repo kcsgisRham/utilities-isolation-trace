@@ -4,7 +4,7 @@ Web app template to trace a utility network.  This app calls a geoprocessing mod
 
 
 
-![App](https://github.com/esri/utilites-isolation-trace/blob/master/utility-isolation-trace.PNG)
+![App](https://github.com/esri/utilities-isolation-trace/blob/master/utility-isolation-trace.PNG)
 
 ## Features
 * Place Finding - Find places or geocode an address
@@ -55,7 +55,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-A copy of the license is available in the repository's [license.txt](https://github.com/esri/utilites-isolation-trace/blob/master/License.txt) file.
+A copy of the license is available in the repository's [license.txt](https://github.com/esri/utilities-isolation-trace/blob/master/License.txt) file.
 
 [](Esri Tags: ArcGIS Web Mapping Service Public Utilities)
 [](Esri Language: JavaScript)​
