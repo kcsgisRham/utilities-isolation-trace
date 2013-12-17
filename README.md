@@ -4,7 +4,7 @@ Web app template to trace a utility network.  This app calls a geoprocessing mod
 
 
 
-![App](https://github.com/ArcGIS/utilites-isolation-trace/blob/master/utility-isolation-trace.PNG)
+![App](https://github.com/esri/utilites-isolation-trace/blob/master/utility-isolation-trace.PNG)
 
 ## Features
 * Place Finding - Find places or geocode an address
