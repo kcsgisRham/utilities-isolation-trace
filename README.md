@@ -55,7 +55,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-A copy of the license is available in the repository's [license.txt](https://raw.github.com/ArcGIS/service-lookup/master/License.txt?login=clareprice&token=f4b6f7d7622e1d0346afa9b0eef62d02) file.
+A copy of the license is available in the repository's [license.txt](https://github.com/esri/utilites-isolation-trace/blob/master/License.txt) file.
 
 [](Esri Tags: ArcGIS Web Mapping Service Public Utilities)
 [](Esri Language: JavaScript)​
