@@ -1000,7 +1000,7 @@ function (
 
             cpSum.set("content", "");
             this._clearResultLayers();
-
+            this._clearOverview();
 
             //this.multiPoint = new Multipoint(this.map.spatialReference);
             this.overExtent = null;

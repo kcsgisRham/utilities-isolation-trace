@@ -33,12 +33,12 @@ define([], function () {
         "bingMapsKey": "", //Enter the url to your organizations bing maps key if you want to use bing basemaps
         "sharinghost": location.protocol + "//" + "www.arcgis.com", //Defaults to arcgis.com. Set this value to your portal or organization host name. 
 
-        "geometryUrl": "http://tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer",
+        "geometryUrl": "http://54.214.169.132:6080/arcgis/rest/services/Utilities/Geometry/GeometryServer",
 
-        "gpUrl": "http://localhost:6080/arcgis/rest/services/IsolationTrace/GPServer/IsolationTrace",
+        "gpUrl": "http://54.214.169.132:6080/arcgis/rest/services/IsolationTrace/GPServer/IsolationTrace",
        
         "highlighterDetails": {
-            "image": "/IsolationTrace/images/ani/blueglow.gif",
+            "image": "/webtrace/images/ani/blueglow.gif",
             "height": 60,
             "width": 60,
             "timeout": 5000
