@@ -208,6 +208,9 @@ function(
                     if (response.itemData.values && response.itemData.values.oauthappid) {
                         this._setupOAuth(response.itemData.values.oauthappid, this.config.sharinghost);
                     }
+  if(response.item && response.item.extent){
+                        this.config.application_extent = response.item.extent;
+                    }
                     deferred.resolve();
                 }));
             } else {
@@ -226,7 +229,8 @@ function(
                 callbackParamName: "callback"
             }).then(lang.hitch(this, function(response) {
 
-                declare.safeMixin(this.config.helperServices || {}, response.helperServices);
+                this.config.helperServices = {};
+                lang.mixin(this.config.helperServices, response.helperServices);
 
                 //Let's set the geometry helper service to be the app default.  
                 if (this.config.helperServices && this.config.helperServices.geometry && this.config.helperServices.geometry.url) {
@@ -247,8 +251,11 @@ function(
             //application default and configuration info has been applied. Currently these values 
             //(center, basemap, theme) are only here as examples and can be removed if you don't plan on 
             //supporting additional url parameters in your application. 
-            var paramItems = ['EventID'];
+            var paramItems = ['center', 'basemap', 'theme'];
             var mixinParams = this._createUrlParamsObject(paramItems);
+  			lang.mixin(this.config, mixinParams);
+			paramItems = ['EventID'];
+            mixinParams = this._createUrlParamsObject(paramItems);
             lang.mixin(this.config.eventDetails, mixinParams);
         }
     });

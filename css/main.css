@@ -54,8 +54,19 @@ html, body {
         height: 100%;
     }
 
-        .simpleGeocoder .esriGeocoder input {
-            width: 90%;
+         .simpleGeocoder .esriGeocoder input {
+            
+            /* Firefox */
+            width: -moz-calc(100% - 75px);
+            /* WebKit */
+            width: -webkit-calc(100% - 75px);
+            /* Opera */
+            width: -o-calc(100% - 75px);
+            /* Standard */
+            width: calc(100% - 75px);
+            padding-right:0px;
+            margin-right:0px;
+
         }
 
 

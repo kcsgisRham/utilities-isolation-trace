@@ -94,8 +94,7 @@ function (
     InfoTemplate,
     Query,
     Timing,
-    Has)
-{
+    Has) {
     return declare("", null, {
         config: {},
         constructor: function (config) {
@@ -321,7 +320,7 @@ function (
                 if (GPParam.results != null && GPParam.saveOptions.type) {
                     if (GPParam.results.features != null) {
                         this._saveLayer(GPParam);
-                      
+
                     }
                     else {
                         this.defCount = this.defCount - 1;
@@ -349,19 +348,21 @@ function (
 
                     editDeferred.addCallback(lang.hitch(this, this._saveComplete));
                     editDeferred.addErrback(function (error) {
+                        this._saveComplete();
                         this.defCount = this.defCount - 1;
                         if (this.defCount == 0) {
                             this._reset();
                             dijit.byId("tools.save").set("iconClass", "customBigIcon saveIcon");
-                            alert(error.message);
+                            
 
                         }
+                        alert(error.message);
                         console.log(error);
                     });
                 }
                 else {
-                    alert(param.paramName + " " + "Save to layer is not present in the webmap");
-                    this.defCount = this.defCount - 1;
+                    alert(param.paramName + ": " + this.config.i18n.error.saveToLayerMissing);
+                    this._saveComplete();
                 }
             }
 
@@ -371,6 +372,11 @@ function (
 
                 this._saveComplete();
 
+            }
+
+            else
+            {
+                this._saveComplete();
             }
         },
         _zoomToEvent: function () {
@@ -408,7 +414,9 @@ function (
 
         },
         _clearOverview: function () {
-            this.resultOverviewLayer.clear();
+            if (this.resultOverviewLayer != null) {
+                this.resultOverviewLayer.clear();
+            }
 
 
         },
@@ -461,28 +469,52 @@ function (
 
             this.geoLocate.startup();
         },
+        _createGeocoderOptions: function () {
+            var options, geocoders = lang.clone(this.config.helperServices.geocode);
+            // each geocoder
+            if (geocoders.length == 0) { return null; }
 
-        _createGeocoder: function () {
+            array.forEach(geocoders, function (geocoder) {
+                if (geocoder.url.indexOf(".arcgis.com/arcgis/rest/services/World/GeocodeServer") > -1) {
+                    geocoder.placefinding = true;
+                    geocoder.placeholder = this.config.i18n.geocoder.defaultText;
+                  
+                }
+                else {
+                    geocoder.suggest = true;
+                }
+                //geocoder.searchExtent = this.map.extent;
+            }, this);
 
-            this.geocoder = new Geocoder({
+            options = {
+                map: this.map,
+                autoNavigate: true,
                 autoComplete: true,
-                theme: "simpleGeocoder",
-                arcgisGeocoder: {
-                    placeholder: this.config.i18n.geocoder.defaultText,
-                    searchExtent: this.map.extent
 
-                },
-                map: this.map
-            }, dojo.byId('searchDiv'));
+                minCharacters: 0,
+                maxLocations: 5,
+                searchDelay: 100,
+                arcgisGeocoder: geocoders.splice(0, 1)[0],
+                geocoders: geocoders
 
-            this.geocoder.on("select", lang.hitch(this, function (result) {
-                console.log(result);
-            }));
-            // address search startup
-            this.geocoder.startup();
+            };
 
-
+       
+            return options;
         },
+        _createGeocoder: function () {
+            var gcOpts = this._createGeocoderOptions();
+            this.geocoder = new Geocoder(gcOpts, dojo.byId('searchDiv'));
+         
+            this.geocoder.startup();
+           
+            
+        },
+        _extentChanged: function () {
+            // each geocoder
+          
+        },
+      
         _showAllResultLayers: function () {
             array.forEach(this.resultLayers, function (layer) {
                 layer.setVisibility(true);
@@ -500,7 +532,7 @@ function (
             this.cps = [];
             var cp;
             cp = new ContentPane({
-                title: this.config.i18n.page.summary,
+                title: this.config.overviewDetails.buttonText,
                 name: "summaryCP",
                 id: "summaryCP"
 
@@ -525,7 +557,7 @@ function (
 
 
                 cp = new ContentPane({
-                    title: GPParam.paramName.replace("_", " "),
+                    title: GPParam.buttonText,
                     name: GPParam.paramName,
                     id: GPParam.paramName + "CP"
 
@@ -683,7 +715,7 @@ function (
                     //"esriFieldTypeString"
                     //esriFieldTypeDate
 
-            
+
                     if (result.type == "esriFieldTypeDate") {
 
                         return { 'name': result.alias, 'field': result.name, editable: false, formatter: this._formatDate };
@@ -968,18 +1000,7 @@ function (
             if (this.skipLayer.graphics.length > 0) {
                 params.SkipLocations = skipFeature;
             }
-            //, "Barriers": barrierFeature, "SkipLocations": skipFeature 
-
-            //if (this.barrierLayer.graphics.length == undefined) {
-            //    var params = { "Flags": flagFeature, "Barriers": barrierFeature, "SkipLocations": skipFeature};
-
-            //}
-            //else {
-            //    barrierFeature.features = this.barrierLayer.graphics;
-
-            //    var params = { "Flags": flagFeature, "Barriers": barrierFeature };
-
-            //}
+          
             this.gp.submitJob(params);
 
         },
@@ -1009,20 +1030,42 @@ function (
             if (this.resultOverviewLayer != null) {
 
                 if (this.resultOverviewLayer.id != null) {
-                    this.resultsCnt = this.resultsCnt + 1;
-                    this._processGPResults(message, this.resultOverviewLayer.id);
+
+                    if (this._verifyParam(message, this.resultOverviewLayer.id)) {
+                        this.resultsCnt = this.resultsCnt + 1;
+                        this._processGPResults(message, this.resultOverviewLayer.id);
+                    }
+                    else
+                    {
+                        console.log("No overview param found or specified");
+                    }
                 }
             }
 
 
             array.forEach(this.config.GPParams, function (GPParam) {
+                if (this._verifyParam(message, GPParam.paramName)) {
 
-                this.resultsCnt = this.resultsCnt + 1;
-                this._processGPResults(message, GPParam.paramName);
-
-
+                    this.resultsCnt = this.resultsCnt + 1;
+                    this._processGPResults(message, GPParam.paramName);
+                }
+                else {
+                    console.log(GPParam.paramName + " not found in GP results");
+                }
             }, this);
 
+
+        },
+        _verifyParam: function (message, paramName) {
+            if (message == null) { return false; }
+            if (message.jobInfo == null) { return false; }
+            if (message.jobInfo.results == null) { return false; }
+            for (var key in message.jobInfo.results) {
+                if (paramName == key) {
+                    return true;
+                }
+            }
+            return false;
 
         },
         _processGPResults: function (message, paramName) {
@@ -1082,8 +1125,10 @@ function (
 
             array.forEach(results.features, function (feature) {
                 this.overExtent = this.overExtent == null ? feature.geometry.getExtent() : this.overExtent.union(feature.geometry.getExtent());
-                var selectGraphic = new Graphic(feature.geometry, null, null, null);
-                this.resultOverviewLayer.add(selectGraphic);
+                if (this.config.overviewDetails.visible.toUpperCase() != "FALSE") {
+                    var selectGraphic = new Graphic(feature.geometry, null, null, null);
+                    this.resultOverviewLayer.add(selectGraphic);
+                }
             }, this);
 
 
@@ -1115,7 +1160,12 @@ function (
             }
         },
         _initMap: function () {
+
             console.log("InitMap");
+            var extentChange = on(this.map, "extent-change", lang.hitch(this, function () {
+                this._extentChanged();
+            }));
+
             this.map.graphics.on("graphic-add", lang.hitch(this, this._clearSelected));
 
             this.gp = new esri.tasks.Geoprocessor(this.config.gpUrl);
@@ -1128,14 +1178,28 @@ function (
             on(this.gp, "get-result-data-complete", lang.hitch(this, this._addFeatures));
 
             this.resultOverviewLayer = new GraphicsLayer();
-
-            var ovrSymbol = new SimpleFillSymbol(this.config.overviewDetails.symbol);
-            var ovrRen = new SimpleRenderer(ovrSymbol);
-
-
             this.resultOverviewLayer.id = this.config.overviewDetails.paramName;
+            var ovrSymbol = null;
+            var ovrRen = null;
+            if (this.config.overviewDetails.symbol != null) {
+                ovrSymbol = new SimpleFillSymbol(this.config.overviewDetails.symbol);
+                ovrRen = new SimpleRenderer(ovrSymbol);
+                this.resultOverviewLayer.setRenderer(ovrRen);
+            }
+            //if (this.config.overviewDetails.visible != null)
+            //{
+            //    if (this.config.overviewDetails.visible.toUpperCase() != "FALSE")
+            //    {
+            //        this.resultOverviewLayer.setVisibility(false);
 
-            this.resultOverviewLayer.setRenderer(ovrRen);
+            //    }
+            //    {
+            //        this.resultOverviewLayer.setVisibility(true);
+            //    }
+            //}
+
+
+
             this.map.addLayer(this.resultOverviewLayer);
 
 
@@ -1224,48 +1288,6 @@ function (
 
 
             this.map.addLayers([this.skipLayer, this.flagLayer, this.barrierLayer]);
-
-
-
-
-
-
-            //dojo.connect(this.resultLayer,"onLoad", function (layer) {
-            //                layer.enableMouseEvents();
-
-            //                layer.on("click", function (e) {
-            //                    alert(e);
-
-            //                });
-
-            //            });
-
-            //this.resultLayer.setRenderer(this.selectionRen);
-            //this.flagLayer.setRenderer(this.flagRen);
-            //this.barrierLayer.setRenderer(this.barrierRen);
-            //this.skipLayer.setRenderer(this.skipRen);
-            //if (this.resultLayer.loaded) {
-            //    this.resultLayer.enableMouseEvents();
-
-            //    this.resultLayer.on("click", function (e) {
-            //        alert(e);
-
-            //    });
-            //}
-            // this.map.graphics.enableMouseEvents();
-
-
-            //dojo.connect(this.resultLayer, "onClick", function (e) {
-            //    alert(e);
-
-            //});
-
-
-
-
-
-
-
         },
         //create a map based on the input web map id
         _addCSVContent: function (gpParam) {

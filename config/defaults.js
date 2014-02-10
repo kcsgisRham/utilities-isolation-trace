@@ -51,6 +51,8 @@ define([], function () {
         "overviewDetails":
             {
                 "paramName": "Affected_Area",
+                "buttonText": "Summary",
+                "visible": "false",
                 "symbol":
                 {
                     "type": "esriSFS",
@@ -75,6 +77,7 @@ define([], function () {
         "GPParams": [
                 {
                     "paramName": "Isolating_Valves",
+                    "buttonText": "Valves",
                     "summaryText": "{Count} Valves Returned in Trace, {SkipCount} were bypassed.",
                     "displayText": "{DIAMETER} inch Valve: {FACILITYID}",
                     "highlightSymbol":
@@ -98,16 +101,17 @@ define([], function () {
                     "bypassDetails":
                         {
                             "skipable": true,
+                            
                             "IDField": "FACILITYID"
                         },
                     "saveOptions": {
-                        "type": "layer",//csv or layer
+                        "type": "nu",//csv or layer
                         "name": "Isolating System Valves"
                     }
                 },
                 {
                     "paramName": "Isolated_Hydrants",
-
+                    "buttonText": "Hydrants",
                     "summaryText": "{Count} Hydrants are affected by this outaged.",
                     "displayText": "{MANUFACTURER} Hydrant {FACILITYID}",
                     "highlightSymbol":
@@ -142,7 +146,7 @@ define([], function () {
                 },
                  {
                      "paramName": "Isolated_Customers",
-
+                     "buttonText": "Customers",
                      "summaryText": "{Count} Customers are affected by this outaged.",
                      "displayText": "Customer {FACILITYID}",
                      "highlightSymbol":
