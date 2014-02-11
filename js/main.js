@@ -29,6 +29,7 @@ define([
     "esri/symbols/PictureMarkerSymbol",
     "esri/symbols/SimpleLineSymbol",
     "esri/symbols/SimpleFillSymbol",
+    "esri/symbols/Symbol",
     "esri/layers/GraphicsLayer",
     "esri/renderers/SimpleRenderer",
     "esri/InfoTemplate",
@@ -71,6 +72,7 @@ function (
     PictureMarkerSymbol,
     SimpleLineSymbol,
     SimpleFillSymbol,
+    Symbol,
     GraphicsLayer,
     SimpleRenderer,
     InfoTemplate,
@@ -1159,6 +1161,24 @@ function (
 
             }
         },
+        _createGraphicFromJSON: function(json)
+        {
+            //simplemarkersymbol | picturemarkersymbol | simplelinesymbol | cartographiclinesymbol | simplefillsymbol | picturefillsymbol | textsymbol
+
+            if (json.type == "simplefillsymbol" || json.type == "esriSFS")
+            {
+               return  new SimpleFillSymbol(json);
+            }
+            else if (json.type == "simplemarkersymbol" || json.type == "esriSMS") {
+                return new SimpleMarkerSymbol(json);
+            }
+            else if (json.type == "simplemlinesymbol" || json.type == "esriSLS") {
+                return new SimpleLineSymbol(json);
+            }
+            
+
+        },
+
         _initMap: function () {
 
             console.log("InitMap");
@@ -1179,25 +1199,21 @@ function (
 
             this.resultOverviewLayer = new GraphicsLayer();
             this.resultOverviewLayer.id = this.config.overviewDetails.paramName;
+            this.resultOverviewLayer.maxScale = this.config.overviewDetails.MaxScale;
+            this.resultOverviewLayer.minScale = this.config.overviewDetails.MinScale;
+
+
             var ovrSymbol = null;
             var ovrRen = null;
             if (this.config.overviewDetails.symbol != null) {
-                ovrSymbol = new SimpleFillSymbol(this.config.overviewDetails.symbol);
+              
+                ovrSymbol = this._createGraphicFromJSON(this.config.overviewDetails.symbol);
+
+               
                 ovrRen = new SimpleRenderer(ovrSymbol);
                 this.resultOverviewLayer.setRenderer(ovrRen);
             }
-            //if (this.config.overviewDetails.visible != null)
-            //{
-            //    if (this.config.overviewDetails.visible.toUpperCase() != "FALSE")
-            //    {
-            //        this.resultOverviewLayer.setVisibility(false);
-
-            //    }
-            //    {
-            //        this.resultOverviewLayer.setVisibility(true);
-            //    }
-            //}
-
+    
 
 
             this.map.addLayer(this.resultOverviewLayer);
@@ -1220,13 +1236,16 @@ function (
             this.resultLayers = []// = new GraphicsLayer();
             array.forEach(this.config.GPParams, lang.hitch(this, function (GPParam) {
                 var resLayer = new GraphicsLayer();
-                var resSymbol = new SimpleMarkerSymbol(GPParam.highlightSymbol);
+                var resSymbol = this._createGraphicFromJSON(GPParam.highlightSymbol);
                 var resRen = new SimpleRenderer(resSymbol);
 
 
                 resLayer.id = GPParam.paramName;
 
                 resLayer.setRenderer(resRen);
+                resLayer.maxScale = GPParam.MaxScale;
+                resLayer.minScale = GPParam.MinScale;
+
                 this.map.addLayer(resLayer);
                 this.resultLayers.push(resLayer);
                 if (GPParam.saveOptions != null) {

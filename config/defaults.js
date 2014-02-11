@@ -52,10 +52,13 @@ define([], function () {
             {
                 "paramName": "Affected_Area",
                 "buttonText": "Summary",
-                "visible": "false",
+                "visible": "true",
+                "MinScale": 10000,
+                "MaxScale": 0,
                 "symbol":
                 {
-                    "type": "esriSFS",
+
+                    "type": "simplefillsymbol",
                     "style": "esriSFSNull",
                     "color": [0, 0, 0, 0],
                     "outline": {
@@ -64,8 +67,7 @@ define([], function () {
                         "color": [255, 0, 0, 255],
                         "width": 3
                     }
-
-
+        
                 },
                 "saveOptions": {
                     "type": "layer",//csv or layer
@@ -80,6 +82,8 @@ define([], function () {
                     "buttonText": "Valves",
                     "summaryText": "{Count} Valves Returned in Trace, {SkipCount} were bypassed.",
                     "displayText": "{DIAMETER} inch Valve: {FACILITYID}",
+                    "MinScale": 10000,
+                    "MaxScale": 0,
                     "highlightSymbol":
                         {
 
@@ -114,6 +118,8 @@ define([], function () {
                     "buttonText": "Hydrants",
                     "summaryText": "{Count} Hydrants are affected by this outaged.",
                     "displayText": "{MANUFACTURER} Hydrant {FACILITYID}",
+                    "MinScale": 10000,
+                    "MaxScale": 0,
                     "highlightSymbol":
                         {
 
@@ -149,6 +155,8 @@ define([], function () {
                      "buttonText": "Customers",
                      "summaryText": "{Count} Customers are affected by this outaged.",
                      "displayText": "Customer {FACILITYID}",
+                     "MinScale": 10000,
+                     "MaxScale": 0,
                      "highlightSymbol":
                         {
 
