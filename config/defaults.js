@@ -116,7 +116,7 @@ define([], function () {
                 {
                     "paramName": "Isolated_Hydrants",
                     "buttonText": "Hydrants",
-                    "summaryText": "{Count} Hydrants are affected by this outaged.",
+                    "summaryText": "{Count} Hydrants would be affected by a shutdown in this area.",
                     "displayText": "{MANUFACTURER} Hydrant {FACILITYID}",
                     "MinScale": 10000,
                     "MaxScale": 0,
@@ -153,7 +153,7 @@ define([], function () {
                  {
                      "paramName": "Isolated_Customers",
                      "buttonText": "Customers",
-                     "summaryText": "{Count} Customers are affected by this outaged.",
+                     "summaryText": "{Count} Customers would be affected by a shutdown in this area.",
                      "displayText": "Customer {FACILITYID}",
                      "MinScale": 10000,
                      "MaxScale": 0,
