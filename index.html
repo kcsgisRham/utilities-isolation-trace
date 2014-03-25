@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -23,8 +23,8 @@
     <title>Trace</title>
     <meta charset="utf-8">
     <!--Use protocol relative urls that way if the browser is viewing the page via HTTPS the js/css file will be requested using the HTTPS protocol-->
-    <link rel="stylesheet" href="//js.arcgis.com/3.7/js/dojo/dijit/themes/claro/claro.css">
-    <link rel="stylesheet" type="text/css" href="//js.arcgis.com/3.7/js/esri/css/esri.css">
+    <link rel="stylesheet" href="//js.arcgis.com/3.9/js/dojo/dijit/themes/claro/claro.css">
+    <link rel="stylesheet" type="text/css" href="//js.arcgis.com/3.9/js/esri/css/esri.css">
     
 
     <!--Load any application specific styles-->
@@ -56,9 +56,9 @@ id="downloadform" target="_blank">
             <div id="LocateButton"></div>
           
         </div>
-        <div class="edgePanelTop" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region: 'top'">
-            <div id="toolbar1" data-dojo-type="dijit/Toolbar" style="background-color: inherit; background-image: none; border-bottom: 0px;">
-                <div data-dojo-type="dijit/form/Button" id="tools.addFlag"  data-dojo-props="baseClass:'none', iconClass:'flagIcon customBigIcon', showLabel:false"></div>
+        <div id="toolPane" class="edgePanelTop" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region: 'top'">
+            <div id="toolbarControls" data-dojo-type="dijit/Toolbar" style="background-color: inherit; background-image: none; border-bottom: 0px;">
+                <div data-dojo-type="dijit/form/Button" id="tools.addFlag" data-dojo-props="baseClass:'none', iconClass:'flagIcon customBigIcon', showLabel:false"></div>
                 <div data-dojo-type="dijit/form/Button" id="tools.addBarrier" data-dojo-props="baseClass:'none', iconClass:'barrierIcon customBigIcon', showLabel:false"></div>
                 <span data-dojo-type="dijit/ToolbarSeparator"></span>
 
@@ -101,7 +101,7 @@ id="downloadform" target="_blank">
         };
     </script>
 
-    <script type="text/javascript" src="//js.arcgis.com/3.7/"></script>
+    <script type="text/javascript" src="//js.arcgis.com/3.9/"></script>
     <script type="text/javascript">
 
        

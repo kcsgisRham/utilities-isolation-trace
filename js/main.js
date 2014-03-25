@@ -54,6 +54,7 @@ define([
      "esri/tasks/query",
      "dojox/timing",
      "dojo/has",
+     "dojo/dom-style",
      "dojo/_base/sniff"
 
 ],
@@ -96,7 +97,8 @@ function (
     InfoTemplate,
     Query,
     Timing,
-    Has) {
+    Has,
+    domStyle) {
     return declare("", null, {
         config: {},
         constructor: function (config) {
@@ -111,6 +113,7 @@ function (
         },
         _mapLoaded: function () {
             // Map is ready
+            this._initButtons();
             this._createToolbar();
             console.log('Toolbar Created');
             this._createInfoWindows();
@@ -144,6 +147,61 @@ function (
 
                 dojo.style("loader", "display", "none");
                 console.log('Loader Hidden');
+
+            }
+
+
+        },
+        _initButtons: function () {
+            this.config.FlagParam = ''
+            this.config.BarrierParam = ''
+            this.config.SkipParam = ''
+
+            if (this.config.GPInputs == null) {
+                this.config.FlagParam = 'Flags'
+                this.config.BarrierParam = 'Barriers'
+                this.config.SkipParam = 'SkipLocations'
+                //    domStyle.set("tools.addBarrier", 'display', 'block');
+                //    dojo.style(dijit.byId('tools.addBarrier').domNode, {
+                //        visibility: (false ? 'hidden' : 'visible'),
+                //        display: (false ? 'none' : 'block')
+                //    });
+                //    domStyle.set("tools.addFlag", 'display', 'block');
+                //    dojo.style(dijit.byId('tools.addFlag').domNode, {
+                //        visibility: (false ? 'hidden' : 'visible'),
+                //        display: (false ? 'none' : 'block')
+                //    });
+
+            }
+            else {
+                array.forEach(this.config.GPInputs, function (GPInput) {
+
+                    if (GPInput.type == 'Barrier') {
+                        this.config.BarrierParam = GPInput.paramName
+                       
+                    }
+                    else if (GPInput.type == 'Flag') {
+                        this.config.FlagParam = GPInput.paramName
+
+                    }
+                    else if (GPInput.type == 'Skip') {
+                        this.config.SkipParam = GPInput.paramName
+
+                    }
+                },this);
+            }
+            if (this.config.BarrierParam == '') {
+                domStyle.set("tools.addBarrier", 'display', 'none');
+                //    dojo.style(dijit.byId('tools.addBarrier').domNode, {
+                //        visibility: (false ? 'hidden' : 'visible'),
+                //        display: (false ? 'none' : 'block')
+                //    });
+            }
+            else if (this.config.FlagParam == '') {
+                domStyle.set("tools.addFlag", 'display', 'none');
+
+            }
+            else if (this.config.SkipParam == '') {
 
             }
 
@@ -995,12 +1053,18 @@ function (
             barrierFeature.features = this.barrierLayer.graphics;
             skipFeature.features = this.skipLayer.graphics;
 
-            var params = { "Flags": flagFeature };
+            //var params = { "Flags": flagFeature };
+            //var params = {};
+
+            var params = {};
+            params[this.config.FlagParam] = flagFeature;
             if (this.barrierLayer.graphics.length > 0) {
-                params.Barriers = barrierFeature;
+                //params.Barriers = barrierFeature;
+                params[this.config.BarrierParam] = barrierFeature;
             }
             if (this.skipLayer.graphics.length > 0) {
-                params.SkipLocations = skipFeature;
+                //params.SkipLocations = skipFeature;
+                params[this.config.SkipParam] = skipFeature;
             }
           
             this.gp.submitJob(params);

@@ -76,6 +76,22 @@ define([], function () {
 
 
             },
+        "GPInputs": [
+            {
+                "paramName": "Flags",
+                "type": "Flag",
+
+            }, {
+                "paramName": "Barriers",
+                "type": "Barrier",
+
+            },
+            {
+                "paramName": "SkipLocations",
+                "type": "Skip",
+
+            }
+        ],
         "GPParams": [
                 {
                     "paramName": "Isolating_Valves",
@@ -109,7 +125,7 @@ define([], function () {
                             "IDField": "FACILITYID"
                         },
                     "saveOptions": {
-                        "type": "nu",//csv or layer
+                        "type": "csv",//csv or layer
                         "name": "Isolating System Valves"
                     }
                 },
