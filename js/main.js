@@ -156,6 +156,7 @@ function (
             this.config.FlagParam = ''
             this.config.BarrierParam = ''
             this.config.SkipParam = ''
+            this.config.OverviewParam = ''
 
             if (this.config.GPInputs == null) {
                 this.config.FlagParam = 'Flags'
@@ -188,6 +189,7 @@ function (
                         this.config.SkipParam = GPInput.paramName
 
                     }
+                    
                 },this);
             }
             if (this.config.BarrierParam == '') {

@@ -93,7 +93,7 @@ define([], function () {
                     "paramName": "ConnectedValves",
                     "buttonText": "Valves",
                     "summaryText": "{Count} Valves Returned in Trace, {SkipCount} were bypassed.",
-                    "displayText": "{Diameter} inch Valve: {FaciltyID}",
+                    "displayText": "{Diameter} inch Valve: {LegacyID}",
                     "MinScale": 0,
                     "MaxScale": 0,
                     "highlightSymbol":
@@ -118,7 +118,7 @@ define([], function () {
                         {
                             "skipable": true,
                             
-                            "IDField": "FaciltyID"
+                            "IDField": "LegacyID"
                         },
                     "saveOptions": {
                         "type": "csv",//csv or layer

@@ -19,7 +19,7 @@ define([], function () {
     //and url parameters.
     var defaults = {
         "appid": "",
-        "webmap": "e802306fc18945a78d649fc0d5c66ff5",
+        "webmap": "067b19e4be4d4b04a6443a4fd47c86a3",
         "oauthappid": null, //"AFTKRmv16wj14N3z",
         //Group templates must support a group url parameter. This will contain the id of the group. 
         //group: "",
@@ -35,25 +35,25 @@ define([], function () {
 
         "geometryUrl": "http://54.214.169.132:6080/arcgis/rest/services/Utilities/Geometry/GeometryServer",
 
-        "gpUrl": "http://localhost:6080/arcgis/rest/services/FindNearestValves/GPServer/Find%20Nearest%20Valves",
+        "gpUrl": "http://54.214.169.132:6080/arcgis/rest/services/IsolationTrace/GPServer/IsolationTrace",
        
         "highlighterDetails": {
-            "image": "/IsolationTrace/images/ani/blueglow.gif",
+            "image": "/webtrace/images/ani/blueglow.gif",
             "height": 60,
             "width": 60,
             "timeout": 5000
         },
         "eventDetails": {
-            "layerName": "",
-            "whereClause": "",
-            "zoomScale": ""
+            "layerName": "Leak Location",
+            "whereClause": "OBJECTID = {EventID}",
+            "zoomScale": "18"
         },
         "overviewDetails":
             {
-                "paramName": "ConnectedValvesArea",
+                "paramName": "Affected_Area",
                 "buttonText": "Summary",
-                "visible": "false",
-                "MinScale": 0,
+                "visible": "true",
+                "MinScale": 10000,
                 "MaxScale": 0,
                 "symbol":
                 {
@@ -78,23 +78,27 @@ define([], function () {
             },
         "GPInputs": [
             {
-                "paramName": "Location_to_trace_from",
+                "paramName": "Flags",
                 "type": "Flag",
+
+            }, {
+                "paramName": "Barriers",
+                "type": "Barrier",
 
             },
             {
-                "paramName": "Valves_to_skip",
+                "paramName": "SkipLocations",
                 "type": "Skip",
 
             }
         ],
         "GPParams": [
                 {
-                    "paramName": "ConnectedValves",
+                    "paramName": "Isolating_Valves",
                     "buttonText": "Valves",
                     "summaryText": "{Count} Valves Returned in Trace, {SkipCount} were bypassed.",
-                    "displayText": "{Diameter} inch Valve: {FaciltyID}",
-                    "MinScale": 0,
+                    "displayText": "{DIAMETER} inch Valve: {FACILITYID}",
+                    "MinScale": 10000,
                     "MaxScale": 0,
                     "highlightSymbol":
                         {
@@ -118,19 +122,19 @@ define([], function () {
                         {
                             "skipable": true,
                             
-                            "IDField": "FaciltyID"
+                            "IDField": "FACILITYID"
                         },
                     "saveOptions": {
                         "type": "csv",//csv or layer
-                        "name": "Valves"
+                        "name": "Isolating System Valves"
                     }
                 },
                 {
-                    "paramName": "ConnectedRegulatorStations",
-                    "buttonText": "Regulator Stations",
-                    "summaryText": "{Count} Regulator Stations are connected to this location.",
-                    "displayText": "Station Name: {Name}",
-                    "MinScale": 0,
+                    "paramName": "Isolated_Hydrants",
+                    "buttonText": "Hydrants",
+                    "summaryText": "{Count} Hydrants would be affected by a shutdown in this area.",
+                    "displayText": "{MANUFACTURER} Hydrant {FACILITYID}",
+                    "MinScale": 10000,
                     "MaxScale": 0,
                     "highlightSymbol":
                         {
@@ -157,17 +161,17 @@ define([], function () {
                              "IDField": ""
                          },
                     "saveOptions": {
-                        "type": "csv",//csv or layer
-                        "name": "RegStations"
+                        "type": "Layer",//csv or layer
+                        "name": "Isolated Hydrants"
                     }
 
                 },
                  {
-                     "paramName": "ConnectedBorderStations",
-                     "buttonText": "Border Stations",
-                     "summaryText": "{Count} Border Stations are connected to this location.",
-                     "displayText": "Station Name: {Name}",
-                     "MinScale": 0,
+                     "paramName": "Isolated_Customers",
+                     "buttonText": "Customers",
+                     "summaryText": "{Count} Customers would be affected by a shutdown in this area.",
+                     "displayText": "Customer {FACILITYID}",
+                     "MinScale": 10000,
                      "MaxScale": 0,
                      "highlightSymbol":
                         {
@@ -193,8 +197,8 @@ define([], function () {
                               "IDField": ""
                           },
                      "saveOptions": {
-                         "type": "csv",//csv or layer
-                         "name": "BorderStation"
+                         "type": "layer",//csv or layer
+                         "name": "Isolated Customers"
                      }
 
                  }
